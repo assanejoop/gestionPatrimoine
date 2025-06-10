@@ -1,0 +1,183 @@
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+    <!-- Entête avec icône et titre -->
+  
+    <!-- Section Dossiers -->
+    <div class="mb-12">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Dossiers</h2>
+        <button class="bg-gray-100 hover:bg-gray-200 text-black px-4 py-2 rounded-lg flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Créer un nouveau dossier
+        </button>
+      </div>
+  
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Dossier Contrats -->
+        <div class="bg-gray-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-start mb-4">
+            <div class="bg-red-100 p-3 rounded-lg mr-3">
+              <img src="assets/images/icones/contrat.png" class="w-5" alt="contrat" srcset="">
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Contrats</h3>
+              <p class="text-gray-500 text-sm">05 fichiers</p>
+            </div>
+          </div>
+          <div class="w-1/6 h-1 bg-[#AA0F0D] rounded"></div>
+        </div>
+  
+        <!-- Dossier Factures -->
+        <div class="bg-gray-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-start mb-4">
+            <div class="bg-purple-100 p-3 rounded-lg mr-3">
+              <img src="data:image/png;base64,
+              iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAatJREFUaEPtmb0uBUEUgL8bohchiKhUKqVHoFHpFCISwkNoPQIJEYVCgUS8gl5DPICfROEZuCdxk2ty7ZydOevcTWabLWbPz3f+dna2Q8uvTsv9pwB4Z1CbgWngFFgGJhKdfgYOgKtE+YFiGgBx/gGQu8W1DxxZKBIdGoALYMPK4I+evW5Aji10agDegRkLY4GOHeAkV68G4CswopHpFwnl+9eyITTONAkgMFkQwwAgEMmN7QGwCtwCYxY94QEgNleAO2A0F8ILQPxeA65zITwBehA3wEhqJrwBxO914DIVwgIgNmar3gOx99gWcF710LADvADz3gBPwGIs1BXrlUH+jwxIjR8CC4kQjQMk+vWnWKynfglaZKAABBEoGQhLIhaRnDk/6KswZs+
+              8BwqAdw+0PgNljHqXUMmAdwZa38QFoJRQZIzU2psYjKRa9sr3gEHE6+5+zXej1gzmJfQGzFp7qdQntudyj1XkYGlTadD6sTNgOxdgsnv89whMWXsX0fcKLAGfuQAiLyXU+8063jCIOHwP7AIfMVuaMRrT4bpeAFzDr/zR7e1jpf1v/nNvMaVt0EUAAAAASUVORK5CYII=" class="w-5"/>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Factures</h3>
+              <p class="text-gray-500 text-sm">07 fichiers</p>
+            </div>
+          </div>
+          <div class="w-2/6 h-1 bg-[#4C1C41] rounded"></div>
+        </div>
+  
+        <!-- Dossier Devis -->
+        <div class="bg-gray-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-start mb-4">
+            <div class="bg-amber-100 p-3 rounded-lg mr-3">
+             <img src="assets/images/icones/devis.png" alt="devis" class="w-5" srcset="">
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Devis</h3>
+              <p class="text-gray-500 text-sm">04 fichiers</p>
+            </div>
+          </div>
+          <div class="w-3/6 h-1 bg-[#A4531D] rounded"></div>
+        </div>
+  
+        <!-- Dossier Autres -->
+        <div class="bg-gray-50 p-6 rounded-lg cursor-pointer hover:shadow-md transition-shadow">
+          <div class="flex items-start mb-4">
+            <div class="bg-blue-100 p-3 rounded-lg mr-3">
+          <img src="assets/images/icones/other.png" alt="other" class="w-5" srcset="">
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Autres</h3>
+              <p class="text-gray-500 text-sm">09 fichiers</p>
+            </div>
+          </div>
+          <div class="w-4/6 h-1 bg-[#125BB2] rounded"></div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Section Fichiers récents -->
+    <div>
+      <h2 class="text-2xl font-bold mb-6">Fichiers récents</h2>
+  
+      <!-- Filtres -->
+      <div class="flex flex-wrap gap-4 mb-6 justify-between">
+        <div class="flex flex-wrap gap-4">
+          <div class="relative">
+            <button class="bg-[#E6E7EC]  px-4 py-3 rounded-[10px] flex justify-between items-center min-w-52" (click)="toggleDropdown('documents')">
+              <span>Tous les documents</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+          </div>
+  
+          <div class="relative">
+            <button class="bg-gray-50  px-4 py-3 rounded-[10px] flex justify-between items-center min-w-52" (click)="toggleDropdown('utilisateur')">
+              <span>Utilisateur</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+          </div>
+  
+          <div class="relative">
+            <button class="bg-gray-50 px-4 py-3 rounded-[10px] flex justify-between items-center min-w-52" (click)="toggleDropdown('dates')">
+              <span>Dates</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+  
+        <button class="bg-gray-100 hover:bg-gray-200 text-black px-4 py-2 rounded-lg flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          Télécharger un fichier
+        </button>
+      </div>
+  
+      <!-- Tableau des fichiers -->
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-white border-b">
+              <th class="p-4 text-left w-10">
+                <input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll()" class="w-5 h-5 rounded border-gray-300 text-blue-900">
+              </th>
+              <th class="p-4 text-left">Nom</th>
+              <th class="p-4 text-left">Créé par</th>
+              <th class="p-4 text-left">Taille</th>
+              <th class="p-4 text-left">Date de création</th>
+              <th class="p-4 text-left">Dernière modification</th>
+              <th class="p-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let file of files" 
+                [ngClass]="{'bg-blue-50': file.selected, 'bg-white': !file.selected, 'border-b': true}">
+              <td class="p-4">
+                <input type="checkbox" [(ngModel)]="file.selected" (change)="updateSelectAllState()" class="w-5 h-5 rounded border-gray-300 text-blue-900">
+              </td>
+              <td class="p-4">{{ file.name }}</td>
+              <td class="p-4">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center mr-2 overflow-hidden">
+                    <img *ngIf="file.creator.image" [src]="file.creator.image" alt="Avatar" class="w-full h-full object-cover">
+                    <span *ngIf="!file.creator.image" class="text-white font-semibold">{{ file.creator.initials }}</span>
+                  </div>
+                  <div>
+                    <div class="font-medium">{{ file.creator.name }}</div>
+                    <div class="text-xs text-gray-500">{{ file.creator.role }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="p-4">{{ file.size }}</td>
+              <td class="p-4">{{ file.creationDate }}</td>
+              <td class="p-4">{{ file.lastModified }}</td>
+              <td class="p-4">
+                <div class="flex justify-center space-x-3">
+                  <button class="text-blue-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                  </button>
+                  <button class="text-blue-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </button>
+                  <button class="text-blue-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

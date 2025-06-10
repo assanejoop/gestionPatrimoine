@@ -1,0 +1,99 @@
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+      <!-- Informations du bâtiment -->
+    <div>
+   
+        
+        <h2 class="text-3xl font-bold mb-4">{{ buildingData.name }}</h2>
+      
+        <div class="flex flex-wrap items-center mb-8">
+          <div class="flex items-center mr-6">
+            <img src="assets/images/icones/location.svg" alt="location"  class="mr-2">
+            <span class="text-gray-600">{{ buildingData.address }}</span>
+          </div>
+          
+          <div class="flex mt-2 md:mt-0 ml-auto">
+            <button class="bg-gray-100 text-black px-4 py-2 rounded-[10px] mr-2">Changer le statut d'occupation</button>
+            <button class="bg-gray-100 text-black px-4 py-2 rounded-[10px] flex items-center">
+              Voir sur la carte
+              <img src="assets/images/icones/locationi.svg" alt="" class="ml-2" srcset="">
+            </button>
+          </div>
+        </div>
+  
+      <!-- Images du bâtiment -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 rounded[20px]">
+        <div class="md:col-span-2">
+          <img [src]="buildingData.mainImage" alt="Bâtiment principal" class="w-full h-auto rounded-lg object-cover" style="max-height: 420px">
+        </div>
+        <div class="flex flex-col gap-4">
+          <div>
+            <img [src]="buildingData.interiorImage1" alt="Intérieur du bâtiment" class="w-full h-auto rounded-lg object-cover" style="max-height: 200px">
+          </div>
+          <div class="relative">
+            <img [src]="buildingData.interiorImage2" alt="Intérieur du bâtiment" class="w-full h-auto rounded-lg object-cover" style="max-height: 200px">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded">
+              +{{ buildingData.additionalImages }}
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Description du bâtiment -->
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold mb-4">Description du bâtiment</h3>
+        <div class="text-gray-700 space-y-4">
+          <p>{{ buildingData.description }}</p>
+          <p>{{ buildingData.additionalInfo }}</p>
+        </div>
+      </div>
+  
+      <!-- Caractéristiques du bâtiment -->
+      <div class="bg-gray-50 rounded-lg p-6 border shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+          <div>
+            <h4 class="text-gray-500 mb-2">Année de construction</h4>
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 text-gray-500 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="font-medium">{{ buildingData.constructionYear }}</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="text-gray-500 mb-2">Nombre d'étage</h4>
+            <div class="flex items-center">
+             <img src="assets/images/icones/escalier.png"  class="w-5 mr-2" alt="" srcset="">
+              <span class="font-medium">{{ buildingData.floors }} / {{ buildingData.units }}</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="text-gray-500 mb-2">Type de bâtiment</h4>
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 text-gray-500 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span class="font-medium">{{ buildingData.type }}</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="text-gray-500 mb-2">Superficie</h4>
+            <div class="flex items-center">
+                <img src="assets/images/icones/superficie.png"  class="w-5 mr-2" alt="" srcset=""> 
+              <span class="font-medium">{{ buildingData.dimensions }}</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="text-gray-500 mb-2">Statut d'ocupation</h4>
+            <div class="flex items-center">
+              <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+              <span class="font-medium text-green-500">{{ buildingData.occupancyStatus }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

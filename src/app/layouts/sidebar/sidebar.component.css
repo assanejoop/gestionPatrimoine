@@ -1,0 +1,14 @@
+.btn-bien 
+{
+    width: 240px;
+    height: 44px;
+    border-radius: 12px;
+    border-width: 1px;
+    gap: 10px;
+    padding-top: 12px;
+    padding-right: 16px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    background: red;
+    
+}

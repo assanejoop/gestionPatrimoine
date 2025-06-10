@@ -1,0 +1,147 @@
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+      <!-- Filtres du tableau -->
+    <div class="flex flex-wrap gap-4 mb-6">
+      <div class="relative flex-grow max-w-xs">
+        <button class="w-full bg-gray-100 px-4 py-3 rounded flex justify-between items-center" (click)="toggleDropdown('status')">
+          <span>Status</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+        <!-- Dropdown menu (montré conditionnellement) -->
+      </div>
+  
+      <div class="relative flex-grow max-w-xs">
+        <button class="w-full bg-gray-100 px-4 py-3 rounded flex justify-between items-center" (click)="toggleDropdown('fournisseur')">
+          <span>Fournisseur</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+        <!-- Dropdown menu (montré conditionnellement) -->
+      </div>
+  
+      <div class="relative flex-grow max-w-xs">
+        <button class="w-full bg-gray-100 px-4 py-3 rounded flex justify-between items-center" (click)="toggleDropdown('dateCreation')">
+          <span>Date de création</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+        <!-- Dropdown menu (montré conditionnellement) -->
+      </div>
+  
+      <div class="relative flex-grow max-w-xs">
+        <button class="w-full bg-gray-100 px-4 py-3 rounded flex justify-between items-center" (click)="toggleDropdown('dateFin')">
+          <span>Date de fin</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+        <!-- Dropdown menu (montré conditionnellement) -->
+      </div>
+  
+      <div class="ml-auto">
+        <button class="bg-white border border-gray-200 hover:bg-gray-50 px-4 py-3 rounded flex items-center text-blue-900 font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Créer un travail
+        </button>
+      </div>
+    </div>
+  
+    <!-- Tableau des travaux -->
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-white border-b">
+            <th class="p-4 text-left w-10">
+              <input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll()" class="w-5 h-5 rounded border-gray-300 text-blue-900">
+            </th>
+            <th class="p-4 text-left">Nom du travail</th>
+            <th class="p-4 text-left">Nature du travail</th>
+            <th class="p-4 text-left">Fournisseur</th>
+            <th class="p-4 text-left">Statut</th>
+            <th class="p-4 text-left">Date de création</th>
+            <th class="p-4 text-left">Échéance</th>
+            <th class="p-4 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of tasks" 
+              [ngClass]="{'bg-blue-50': task.selected, 'bg-white': !task.selected, 'border-b': true}">
+            <td class="p-4">
+              <input type="checkbox" [(ngModel)]="task.selected" (change)="updateSelectAllState()" class="w-5 h-5 rounded border-gray-300 text-blue-900">
+            </td>
+            <td class="p-4">{{ task.name }}</td>
+            <td class="p-4">{{ task.nature }}</td>
+            <td class="p-4">{{ task.provider }}</td>
+            <td class="p-4">
+              <span [ngClass]="{
+                'text-red-500': task.status === 'Annulé',
+                'text-green-500': task.status === 'Terminé',
+                'text-blue-600': task.status === 'En cours',
+                'text-gray-600': task.status === 'En attente'
+              }">{{ task.status }}</span>
+            </td>
+            <td class="p-4">{{ task.creationDate }}</td>
+            <td class="p-4">
+              <div class="flex items-center" 
+                   [ngClass]="{'text-red-500': task.isUrgent}">
+                <svg *ngIf="task.isUrgent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 mr-2">
+                  <circle cx="12" cy="12" r="10" stroke-width="2" stroke="currentColor" fill="none"></circle>
+                  <path stroke-linecap="round" stroke-width="2" d="M12 8v4l3 3"></path>
+                </svg>
+                <svg *ngIf="!task.isUrgent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 mr-2 text-gray-500">
+                  <circle cx="12" cy="12" r="10" stroke-width="2" stroke="currentColor" fill="none"></circle>
+                  <path stroke-linecap="round" stroke-width="2" d="M12 8v4l3 3"></path>
+                </svg>
+                {{ task.dueDate }}
+              </div>
+            </td>
+            <td class="p-4">
+              <div class="flex justify-center space-x-2">
+                <button class="text-blue-900">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="text-blue-900">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Pagination -->
+    <div class="flex justify-between items-center mt-4 px-2">
+      <div class="text-sm text-gray-600">
+        Voir de 1 à 20 sur 02 pages
+      </div>
+      <div class="flex space-x-1">
+        <button class="w-8 h-8 flex items-center justify-center rounded border" [ngClass]="{'bg-gray-200': currentPage > 1, 'bg-gray-100 text-gray-400': currentPage === 1}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+        <button class="w-8 h-8 flex items-center justify-center rounded border bg-blue-900 text-white">
+          1
+        </button>
+        <button class="w-8 h-8 flex items-center justify-center rounded border">
+          2
+        </button>
+        <button class="w-8 h-8 flex items-center justify-center rounded border bg-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
