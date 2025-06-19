@@ -1,169 +1,148 @@
 <div class="min-h-screen bg-gray-50 p-6">
-    <!-- Header -->
-    <div class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <nav class="text-sm text-gray-500">
-              <span>Tableau de bord</span>
-              <span class="mx-2">></span>
-              <span class="text-gray-900">État du Patrimoine Immobilier</span>
-            </nav>
+  <!-- Header -->
+  <div class="bg-white rounded-lg shadow-sm mb-6">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <nav class="text-sm text-gray-500">
+            <span>Tableau de bord</span>
+            <span class="mx-2">></span>
+            <span class="text-gray-900">État du Patrimoine Immobilier</span>
+          </nav>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+            <span class="text-white text-xs">🔔</span>
           </div>
+          <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
           <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-              <span class="text-white text-xs">🔔</span>
+            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <span class="text-white text-xs font-bold">CG</span>
             </div>
-            <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
-            <div class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span class="text-white text-xs font-bold">CG</span>
-              </div>
-              <div class="text-right">
-                <div class="text-sm font-medium text-gray-900">Cheikh Gueye</div>
-                <div class="text-xs text-gray-500">Administrateur</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <div class="px-6 py-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">État du Patrimoine Immobilier</h1>
-            <p class="text-gray-600">Suivre la quantité, la typologie et la disponibilité du patrimoine immobilier</p>
-          </div>
-          <div class="flex items-center space-x-4">
-            <!-- Période Dropdown -->
-            <div class="relative">
-              <select 
-                [value]="selectedPeriod()" 
-                (change)="onPeriodChange($event)"
-                class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option *ngFor="let period of periods()" [value]="period">{{ period }}</option>
-              </select>
-              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </div>
-            </div>
-  
-            <!-- Région Dropdown -->
-            <div class="relative">
-              <select 
-                [value]="selectedRegion()" 
-                (change)="onRegionChange($event)"
-                class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option *ngFor="let region of regionsList()" [value]="region">{{ region }}</option>
-              </select>
-              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </div>
-            </div>
-  
-            <!-- Export Button -->
-            <button 
-              (click)="exportData()"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center space-x-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-              <span>Exporter</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
-      <div *ngFor="let card of statCards(); let i = index" class="bg-white p-6 rounded-lg shadow-sm">
-        <div class="flex items-start justify-between">
-          <div class="flex-1">
-            <div class="flex items-center mb-2">
-              <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path *ngIf="card.icon === 'home'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                  <path *ngIf="card.icon === 'key'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
-                  <path *ngIf="card.icon === 'building'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                  <path *ngIf="card.icon === 'users'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                  <path *ngIf="card.icon === 'building-2'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
-                </svg>
-              </div>
-            </div>
-            <div class="text-3xl font-bold text-gray-900 mb-1">{{ card.value | number }}</div>
-            <div class="text-sm font-medium text-gray-900 mb-2">{{ card.title }}</div>
-            <div *ngIf="card.subtitle" class="text-sm text-yellow-600 mb-2 flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-              </svg>
-              {{ card.subtitle }}
-            </div>
-            <div class="flex items-center text-sm">
-              <span [class]="card.trend.isPositive ? 'text-green-600' : 'text-red-600'" class="flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path *ngIf="card.trend.isPositive" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path>
-                  <path *ngIf="!card.trend.isPositive" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7l-9.2 9.2M7 7v10h10"></path>
-                </svg>
-                <span *ngIf="card.trend.value !== 0">{{ card.trend.isPositive ? '+' : '-' }}{{ card.trend.value }}</span>
-              </span>
-              <span class="text-gray-500 ml-1">{{ card.trend.label }}</span>
+            <div class="text-right">
+              <div class="text-sm font-medium text-gray-900">Cheikh Gueye</div>
+              <div class="text-xs text-gray-500">Administrateur</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  
-    <!-- Charts Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-      <!-- Bar Chart -->
-      <div class="bg-white p-6 rounded-lg shadow-sm">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Nombre de bâtiments avec documents manquants</h3>
-        <div class="space-y-4">
-          <div *ngFor="let item of buildingDocumentsData(); let i = index" class="flex items-end space-x-2">
-            <div class="flex-1 flex items-end justify-between">
-              <span class="text-sm text-gray-600">{{ item.name }}</span>
-              <div class="flex items-end space-x-1">
-                <div [class]="getBarColor(i)" [style.height.%]="getBarHeight(item.value)" class="w-8 min-h-[20px] rounded-t"></div>
-                <span class="text-sm font-medium text-gray-900">{{ item.value }}</span>
-              </div>
+
+    <div class="px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">État du Patrimoine Immobilier</h1>
+          <p class="text-gray-600">Suivre la quantité, la typologie et la disponibilité du patrimoine immobilier</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <!-- Période Dropdown -->
+          <div class="relative">
+            <select 
+              [value]="selectedPeriod()" 
+              (change)="onPeriodChange($event)"
+              class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option *ngFor="let period of periods()" [value]="period">{{ period }}</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
             </div>
           </div>
-        </div>
-      </div>
-  
-      <!-- Completion Rate -->
-      <div class="bg-white p-6 rounded-lg shadow-sm">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Taux de complétion des fiches bâtiment</h3>
-        <div class="flex items-center justify-center">
-          <div class="relative w-32 h-32">
-            <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" stroke="#e5e7eb" stroke-width="10" fill="none" />
-              <circle 
-                cx="50" 
-                cy="50" 
-                r="45" 
-                stroke="#8b5cf6" 
-                stroke-width="10" 
-                fill="none"
-                [style.stroke-dasharray]="getCompletionStrokeDasharray()"
-                stroke-linecap="round"
-              />
+
+          <!-- Région Dropdown -->
+          <div class="relative">
+            <select 
+              [value]="selectedRegion()" 
+              (change)="onRegionChange($event)"
+              class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option *ngFor="let region of regionsList()" [value]="region">{{ region }}</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Export Button -->
+          <button 
+            (click)="exportData()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="text-center">
-                <div class="text-2xl font-bold text-gray-900">{{ completionRate() }}%</div>
-                <div class="text-xs text-gray-500">Taux de complétion</div>
-              </div>
+            <span>Exporter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards with Horizontal Scroll -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
+    <div *ngFor="let card of statCards(); let i = index" class="bg-white p-6 rounded-lg shadow-sm">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <div class="flex items-center mb-2">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path *ngIf="card.icon === 'home'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                <path *ngIf="card.icon === 'key'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                <path *ngIf="card.icon === 'building'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                <path *ngIf="card.icon === 'users'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                <path *ngIf="card.icon === 'building-2'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="text-3xl font-bold text-gray-900 mb-1">{{ card.value | number }}</div>
+          <div class="text-sm font-medium text-gray-900 mb-2">{{ card.title }}</div>
+          <div *ngIf="card.subtitle" class="text-sm text-yellow-600 mb-2 flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            {{ card.subtitle }}
+          </div>
+          <div class="flex items-center text-sm">
+            <span [class]="card.trend.isPositive ? 'text-green-600' : 'text-red-600'" class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path *ngIf="card.trend.isPositive" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path>
+                <path *ngIf="!card.trend.isPositive" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7l-9.2 9.2M7 7v10h10"></path>
+              </svg>
+              <span *ngIf="card.trend.value !== 0">{{ card.trend.isPositive ? '+' : '-' }}{{ card.trend.value }}</span>
+            </span>
+            <span class="text-gray-500 ml-1">{{ card.trend.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <!-- Bar Chart -->
+    <div class="bg-white p-6 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Nombre de bâtiments avec documents manquants</h3>
+      <div class="h-64">
+        <canvas #barChart></canvas>
+      </div>
+    </div>
+
+    <!-- Completion Rate -->
+    <div class="bg-white p-6 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Taux de complétion des fiches bâtiment</h3>
+      <div class="flex items-center justify-center h-64">
+        <div class="relative">
+          <canvas #completionChart width="200" height="200"></canvas>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-gray-900">{{ completionRate() }}%</div>
+              <div class="text-xs text-gray-500">Taux de complétion</div>
             </div>
           </div>
         </div>
       </div>
-  
+    </div>
       <!-- Revenue Donut -->
       <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Total Revenue</h3>

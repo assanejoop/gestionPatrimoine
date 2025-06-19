@@ -15,53 +15,16 @@ export class SidebarComponent implements OnInit {
       name: 'Tableau de bord', 
       icon: 'dashboard', 
       expanded: false,
-      route: '/dashboard'
-    },
-    // 
-    { 
-      name: 'Geolocatisation et Densité', 
-      icon: 'localisation', 
-      expanded: false,
-      route: '/dashboard/geolocalisation'
-    },
-    { 
-      name: 'Documents et Archivage', 
-      icon: 'documents', 
-      expanded: false,
-      route: '/dashboard/documents-archivage'
-    },
-    { 
-      name: 'Travaux Maintenance', 
-      icon: 'documents', 
-      expanded: false,
-      route: '/dashboard/travaux-maintenance'
-    },
-    { 
-      name: 'Gestion Locative', 
-      icon: 'localisation', 
-      expanded: false,
-      route: '/dashboard/gestion-locative'
-    },
-    { 
-      name: 'Fournisseurs', 
-      icon: 'localisation', 
-      expanded: false,
-      route: '/dashboard/fournisseurs'
-    },
-    { 
-      name: 'Utilisateurs et Accès', 
-      icon: 'utilisateurs', 
-      expanded: false,
-      route: '/dashboard/utilisateurs'
-    },
-    { 
-      name: 'Biens immobiliers', 
-      icon: 'buildings', 
-      expanded: true,
-      route: '/dashboard/building',
+      route: '/dashboard',
       subItems: [
-        { name: 'Liste des bâtiments', route: '/dashboard/building/list', active: true },
-        { name: 'Cartographie', route: '/dashboard/building/maps', active: false }
+        { name: 'Etat du Patrimoine', route: '/dashboard' },
+        { name: 'Geolocatisation et Densité', route: '/dashboard/geolocalisation' },
+        { name: 'Documents et Archivage', route: '/dashboard/documents-archivage' },
+        { name: 'Travaux Maintenance', route: '/dashboard/travaux-maintenance' },
+        { name: 'Gestion Locative', route: '/dashboard/gestion-locative' },
+        { name: 'Fournisseurs', route: '/dashboard/fournisseurs' },
+        { name: 'Rapports', route: '/dashboard/rapport' },
+        { name: 'Analyses Financières', route: '/dashboard/analyse-financiere' }
       ]
     },
     { 
@@ -69,6 +32,16 @@ export class SidebarComponent implements OnInit {
       icon: 'users', 
       expanded: false,
       route: '/dashboard/users'
+    },
+    { 
+      name: 'Biens immobiliers', 
+      icon: 'buildings', 
+      expanded: false,
+      route: '/dashboard/building',
+      subItems: [
+        { name: 'Liste des bâtiments', route: '/dashboard/building/list' },
+        { name: 'Cartographie', route: '/dashboard/building/maps' }
+      ]
     },
     { 
       name: 'Paramètres', 

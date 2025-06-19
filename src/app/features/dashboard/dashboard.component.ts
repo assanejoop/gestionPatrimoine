@@ -1,6 +1,9 @@
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 interface StatCard {
   title: string;
@@ -32,8 +35,18 @@ interface RegionData {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   
+  @ViewChild('barChart', { static: false }) barChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('completionChart', { static: false }) completionChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('revenueChart', { static: false }) revenueChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('geoChart', { static: false }) geoChartRef!: ElementRef<HTMLCanvasElement>;
+
+  private barChart?: Chart;
+  private completionChart?: Chart;
+  private revenueChart?: Chart;
+  private geoChart?: Chart;
+
   // Signaux pour les données du dashboard
   statCards = signal<StatCard[]>([
     {
@@ -73,9 +86,9 @@ export class DashboardComponent implements OnInit {
     }
   ]);
 
-  // Données pour le graphique en barres (Nombre de bâtiments avec documents manquants)
+  // Données pour le graphique en barres
   buildingDocumentsData = signal<ChartData[]>([
-    { name: 'Éducation', value: 950 },
+    { name: 'Education', value: 950 },
     { name: 'Intérieur', value: 1450 },
     { name: 'Justice', value: 1300 },
     { name: 'Autres', value: 1100 }
@@ -84,7 +97,7 @@ export class DashboardComponent implements OnInit {
   // Taux de complétion
   completionRate = signal(40);
 
-  // Données pour le graphique en donut (Total Revenue)
+  // Données pour le graphique en donut
   revenueData = signal({
     occupied: 80,
     vacant: 20
@@ -121,13 +134,178 @@ export class DashboardComponent implements OnInit {
   regionsList = signal(['Toutes les régions', 'Dakar', 'Saint-Louis', 'Thiès', 'Kaolack']);
 
   ngOnInit() {
-    // Initialisation des données si nécessaire
     this.loadDashboardData();
   }
 
+  ngAfterViewInit() {
+    // Délai pour s'assurer que les éléments DOM sont prêts
+    setTimeout(() => {
+      this.initializeCharts();
+    }, 100);
+  }
+
   private loadDashboardData() {
-    // Simulation du chargement des données
     console.log('Chargement des données du dashboard...');
+  }
+
+  private initializeCharts() {
+    this.createBarChart();
+    this.createCompletionChart();
+    this.createRevenueChart();
+    this.createGeoChart();
+  }
+
+  private createBarChart() {
+    if (!this.barChartRef?.nativeElement) return;
+
+    const ctx = this.barChartRef.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const data = this.buildingDocumentsData();
+    
+    const config: ChartConfiguration = {
+      type: 'bar' as ChartType,
+      data: {
+        labels: data.map(item => item.name),
+        datasets: [{
+          data: data.map(item => item.value),
+          backgroundColor: ['#60a5fa', '#3b82f6', '#1f2937', '#eab308'],
+          borderRadius: 4,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: false
+            },
+            ticks: {
+              display: false
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              font: {
+                size: 12
+              },
+              color: '#6b7280'
+            }
+          }
+        }
+      }
+    };
+
+    this.barChart = new Chart(ctx, config);
+  }
+
+  private createCompletionChart() {
+    if (!this.completionChartRef?.nativeElement) return;
+
+    const ctx = this.completionChartRef.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const completionRate = this.completionRate();
+    
+    const config: ChartConfiguration = {
+      type: 'doughnut' as ChartType,
+      data: {
+        datasets: [{
+          data: [completionRate, 100 - completionRate],
+          backgroundColor: ['#8b5cf6', '#e5e7eb'],
+          borderWidth: 0,
+          // cutout: '70%'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    };
+
+    this.completionChart = new Chart(ctx, config);
+  }
+
+  private createRevenueChart() {
+    if (!this.revenueChartRef?.nativeElement) return;
+
+    const ctx = this.revenueChartRef.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const revenue = this.revenueData();
+    
+    const config: ChartConfiguration = {
+      type: 'doughnut' as ChartType,
+      data: {
+        labels: ['Bâtiments occupés', 'Bâtiments vacants'],
+        datasets: [{
+          data: [revenue.occupied, revenue.vacant],
+          backgroundColor: ['#3b82f6', '#93c5fd'],
+          borderWidth: 0,
+          // cutout: '60%'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    };
+
+    this.revenueChart = new Chart(ctx, config);
+  }
+
+  private createGeoChart() {
+    if (!this.geoChartRef?.nativeElement) return;
+
+    const ctx = this.geoChartRef.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const geo = this.geoData();
+    
+    const config: ChartConfiguration = {
+      type: 'doughnut' as ChartType,
+      data: {
+        labels: ['Avec GPS', 'Sans GPS'],
+        datasets: [{
+          data: [geo.withGPS, geo.withoutGPS],
+          backgroundColor: ['#3b82f6', '#e5e7eb'],
+          borderWidth: 0,
+          // cutout: '60%'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    };
+
+    this.geoChart = new Chart(ctx, config);
   }
 
   onPeriodChange(event: Event) {
@@ -147,19 +325,7 @@ export class DashboardComponent implements OnInit {
   }
 
   exportData() {
-    // Logique d'exportation
     console.log('Export des données...');
-  }
-
-  // Méthodes utilitaires pour les graphiques
-  getBarHeight(value: number): number {
-    const maxValue = Math.max(...this.buildingDocumentsData().map(d => d.value));
-    return (value / maxValue) * 100;
-  }
-
-  getBarColor(index: number): string {
-    const colors = ['bg-blue-400', 'bg-blue-600', 'bg-gray-800', 'bg-yellow-500'];
-    return colors[index] || 'bg-gray-400';
   }
 
   getDensityColor(density: number): string {
@@ -169,12 +335,6 @@ export class DashboardComponent implements OnInit {
     if (density >= 10) return 'bg-orange-300';
     return 'bg-orange-200';
   }
-
-  // getCompletionStrokeDasharray(): string {
-  //   const circumference = 2 * Math.PI * 45; // rayon de 45
-  //   const progress = (this.completionRate() / 100) * circumference;
-  //   return `${progress} ${circumference}`;
-  // }
 
   getRegionPosition(regionName: string): string {
     const positions: { [key: string]: string } = {
@@ -197,39 +357,13 @@ export class DashboardComponent implements OnInit {
     return positions[regionName] || 'top: 50%; left: 50%; width: 50px; height: 25px;';
   }
 
-  // Ajoutez ces méthodes dans votre DashboardComponent
-
-// Méthode pour calculer la largeur des barres en pourcentage
-getBarWidthPercentage(value: number): number {
-  const maxValue = Math.max(...this.buildingDocumentsData().map(d => d.value));
-  return (value / maxValue) * 100;
+  ngOnDestroy() {
+    // Nettoyer les graphiques
+    if (this.barChart) this.barChart.destroy();
+    if (this.completionChart) this.completionChart.destroy();
+    if (this.revenueChart) this.revenueChart.destroy();
+    if (this.geoChart) this.geoChart.destroy();
+  }
 }
 
-// Méthode pour les couleurs des barres horizontales
-getHorizontalBarColor(index: number): string {
-  const colors = ['bg-blue-400', 'bg-blue-600', 'bg-gray-800', 'bg-yellow-500'];
-  return colors[index] || 'bg-gray-400';
-}
-
-// Méthode pour le cercle de progression (mise à jour)
-getCompletionStrokeDasharray(): string {
-  const circumference = 2 * Math.PI * 40; // rayon de 40 au lieu de 45
-  const progress = (this.completionRate() / 100) * circumference;
-  return `${progress} ${circumference}`;
-}
-
-// Méthode pour positionner le point sur le cercle
-getProgressDotPosition(): string {
-  const percentage = this.completionRate();
-  const angle = (percentage / 100) * 360 - 90; // -90 pour commencer en haut
-  const radians = (angle * Math.PI) / 180;
-  const radius = 80; // rayon en pixels pour le positionnement du point
-  const centerX = 80; // centre du conteneur (160px / 2)
-  const centerY = 80;
-  
-  const x = centerX + radius * Math.cos(radians);
-  const y = centerY + radius * Math.sin(radians);
-  
-  return `top: ${y}px; left: ${x}px; transform: translate(-50%, -50%);`;
-}
-}
+// le html

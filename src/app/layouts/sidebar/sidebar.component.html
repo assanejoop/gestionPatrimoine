@@ -23,10 +23,11 @@
       <!-- Dynamic Menu Items -->
       <li *ngFor="let item of menuItems(); let i = index" class="mb-2">
         <a 
-          [routerLink]="item.route" 
-          [routerLinkActive]="'bg-blue-50 dark:bg-gray-800 text-blue-600 dark:text-blue-400'" 
+          [routerLink]="item.subItems ? null : item.route" 
+          [routerLinkActive]="item.subItems ? '' : 'bg-blue-50 dark:bg-gray-800 text-blue-600 dark:text-blue-400'" 
           [routerLinkActiveOptions]="{exact: !item.subItems}"
           class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          [class.cursor-pointer]="item.subItems"
           (click)="item.subItems && $event.preventDefault(); item.subItems && toggleSubmenu(i)"
         >
           <div class="flex items-center">
@@ -35,7 +36,6 @@
               <img *ngSwitchCase="'dashboard'" src="assets/images/icones/Settings.svg" alt="" class="h-6 w-6">
               <img *ngSwitchCase="'localisation'" src="assets/images/icones/location.svg" alt="" class="h-6 w-6">
               <img *ngSwitchCase="'documents'" src="assets/images/icones/other.png" alt="" class="h-6 w-6">
-
               <img *ngSwitchCase="'buildings'" src="assets/images/icones/hand.svg" alt="" class="h-6 w-6">
               <svg *ngSwitchCase="'utilisateurs'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -63,15 +63,14 @@
           <li *ngFor="let subItem of item.subItems">
             <a 
               [routerLink]="subItem.route"
-              routerLinkActive="text-[#0A1B7B] dark:text-indigo-400 font-medium"
+              routerLinkActive="bg-white dark:bg-white text-[#0A1B7B] dark:text-[#0A1B7B] font-medium shadow-sm"
               [routerLinkActiveOptions]="{exact: true}"
-              class="flex items-center p-2 transition-colors"
-              [class.text-gray-500]="!subItem.active"
-              [class.dark:text-gray-400]="!subItem.active"
+              class="flex items-center p-3 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-gray-50 hover:text-gray-700 dark:hover:text-gray-700"
+              [class.text-gray-600]="!isActiveRoute(subItem.route)"
+              [class.dark:text-gray-500]="!isActiveRoute(subItem.route)"
             >
               <div class="w-2 h-2 rounded-full mr-3" 
                    [class.bg-[#0A1B7B]]="isActiveRoute(subItem.route)" 
-                   [class.dark:bg-[#0A1B7B]]="isActiveRoute(subItem.route)"
                    [class.bg-gray-400]="!isActiveRoute(subItem.route)"
                    [class.dark:bg-gray-500]="!isActiveRoute(subItem.route)"></div>
               {{ subItem.name }}
@@ -93,7 +92,7 @@
   </nav>
 
   <!-- Theme Toggle -->
-  <div class="p-4 mt-auto  border-gray-200 dark:border-gray-700">
+  <div class="p-4 mt-auto border-gray-200 dark:border-gray-700">
     <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
       <button 
         (click)="setTheme('light')" 

@@ -43,6 +43,14 @@ export const routes: Routes = [
           loadComponent: () => import('./features/gestion-locative/gestion-locative.component').then(m => m.GestionLocativeComponent)
         },
         {
+          path: 'rapport',
+          loadComponent: () => import('./features/rapport/rapport.component').then(m => m.RapportComponent)
+        },
+        {
+          path: 'analyse-financiere',
+          loadComponent: () => import('./features/analyse-financiere/analyse-financiere.component').then(m => m.AnalyseFinanciereComponent)
+        },
+        {
           path: 'utilisateurs',
           loadComponent: () => import('./features/utilisateurs/utilisateurs.component')
             .then(m => {
