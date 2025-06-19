@@ -1,0 +1,331 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Tableau de bord</span>
+        <span class="breadcrumb-separator">></span>
+        <span class="breadcrumb-item active">Travaux & Maintenance</span>
+      </div>
+      
+      <div class="header-actions">
+        <div class="notification-icon">
+          <i class="icon-notification"></i>
+          <span class="notification-badge">1</span>
+        </div>
+        <div class="theme-toggle">
+          <i class="icon-theme"></i>
+        </div>
+        <div class="user-profile">
+          <div class="user-avatar">
+            <img src="assets/images/avatar.jpg" alt="Cheikh Gueye">
+          </div>
+          <div class="user-info">
+            <span class="user-name">Cheikh Gueye</span>
+            <span class="user-role">Administrateur</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-title">
+          <h1>Travaux & Maintenance</h1>
+          <p>Suivre les activités techniques et coûts associés</p>
+        </div>
+        
+        <div class="page-controls">
+          <div class="period-selector">
+            <select>
+              <option>Période</option>
+            </select>
+          </div>
+          <div class="region-selector">
+            <select>
+              <option>Région</option>
+            </select>
+          </div>
+          <button class="export-btn">
+            <i class="icon-export"></i>
+            Exporter
+          </button>
+        </div>
+      </div>
+  
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon buildings">
+            <i class="icon-buildings"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats().plannedWorks }}</div>
+            <div class="stat-label">Travaux planifiés</div>
+            <div class="stat-trend positive">
+              <i class="icon-arrow-up"></i>
+              <span>+5 nouveaux cette année</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon calendar">
+            <i class="icon-calendar"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats().inProgress }}</div>
+            <div class="stat-label">En cours</div>
+            <div class="stat-trend warning">
+              <i class="icon-warning"></i>
+              <span>02 En litige</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon contracts">
+            <i class="icon-contracts"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats().completed }}</div>
+            <div class="stat-label">Achevés</div>
+            <div class="stat-trend warning">
+              <i class="icon-warning"></i>
+              <span>02 En litige</span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-icon budget">
+            <i class="icon-budget"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats().budgetConsumed }}%</div>
+            <div class="stat-label">Budget consommé</div>
+            <div class="stat-trend">
+              <span>Sur {{ formatCurrency(stats().totalBudget) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <!-- Travaux planifiés/en cours/achevés -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Travaux planifiés / en cours / achevés</h3>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color planned"></span>
+                <span>Planifiés</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color progress"></span>
+                <span>En cours</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color completed"></span>
+                <span>Achevés</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-content">
+            <div class="bar-chart">
+              <div *ngFor="let work of monthlyWorks()" class="bar-group">
+                <div class="bars">
+                  <div class="bar planned" [style.height.px]="work.planned * 20"></div>
+                  <div class="bar progress" [style.height.px]="work.inProgress * 20"></div>
+                  <div class="bar completed" [style.height.px]="work.completed * 20"></div>
+                </div>
+                <div class="bar-label">{{ work.month }}</div>
+              </div>
+            </div>
+            <!-- <div class="chart-y-axis">
+              <span>5</span>
+              <span>4</span>
+              <span>3</span>
+              <span>2</span>
+              <span>1</span>
+              <span>0</span>
+            </div> -->
+          </div>
+        </div>
+  
+        <!-- Répartition par type -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Répartition par type de travaux</h3>
+          </div>
+          <div class="chart-content">
+            <div class="pie-chart">
+              <svg viewBox="0 0 200 200" class="pie-svg">
+                <circle cx="100" cy="100" r="80" fill="transparent" stroke="#4F81FF" stroke-width="60" 
+                        stroke-dasharray="175.93 351.86" stroke-dashoffset="0"></circle>
+                <circle cx="100" cy="100" r="80" fill="transparent" stroke="#4CAF50" stroke-width="60" 
+                        stroke-dasharray="131.95 351.86" stroke-dashoffset="-175.93"></circle>
+                <circle cx="100" cy="100" r="80" fill="transparent" stroke="#FFB84D" stroke-width="60" 
+                        stroke-dasharray="105.56 351.86" stroke-dashoffset="-307.88"></circle>
+                <circle cx="100" cy="100" r="80" fill="transparent" stroke="#E8E8E8" stroke-width="60" 
+                        stroke-dasharray="105.56 351.86" stroke-dashoffset="-413.44"></circle>
+              </svg>
+            </div>
+            <div class="pie-legend">
+              <div *ngFor="let item of workTypeDistribution()" class="legend-item">
+                <span class="legend-dot" [style.background-color]="item.color"></span>
+                <span>{{ item.type }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Délai moyen d'exécution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Délai moyen d'exécution (jours)</h3>
+            <select class="chart-filter">
+              <option>Jour</option>
+            </select>
+          </div>
+          <div class="chart-content">
+            <div class="line-chart">
+              <svg viewBox="0 0 400 200" class="line-svg">
+                <polyline points="50,150 100,140 150,180 200,100 250,130 300,140 350,150" 
+                          fill="none" stroke="#FF4444" stroke-width="2"></polyline>
+                <circle cx="50" cy="150" r="4" fill="#FF4444"></circle>
+                <circle cx="100" cy="140" r="4" fill="#FF4444"></circle>
+                <circle cx="150" cy="180" r="4" fill="#FF4444"></circle>
+                <circle cx="200" cy="100" r="4" fill="#FF4444"></circle>
+                <circle cx="250" cy="130" r="4" fill="#FF4444"></circle>
+              </svg>
+            </div>
+            <div class="chart-x-axis">
+              <span *ngFor="let delay of executionDelays()">{{ delay.month }}</span>
+            </div>
+            <!-- <div class="chart-y-axis">
+              <span>20</span>
+              <span>18</span>
+              <span>16</span>
+              <span>14</span>
+              <span>12</span>
+              <span>10</span>
+            </div> -->
+          </div>
+        </div>
+  
+        <!-- Travaux en retard -->
+        <div class="chart-card gauge-card">
+          <div class="chart-header">
+            <h3>Travaux en retard (%)</h3>
+          </div>
+          <div class="chart-content">
+            <div class="gauge-chart">
+              <svg viewBox="0 0 200 200" class="gauge-svg">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#F0F0F0" stroke-width="20"></circle>
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#FF4444" stroke-width="20" 
+                        stroke-dasharray="201.06 502.65" stroke-dashoffset="125.66" 
+                        transform="rotate(-90 100 100)"></circle>
+              </svg>
+              <div class="gauge-value">{{ stats().delayedWorks }}%</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Incidents signalés -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Incidents signalés par bâtiment</h3>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color incidents"></span>
+                <span>Incidents</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-content">
+            <div class="horizontal-bar-chart">
+              <div *ngFor="let incident of buildingIncidents()" class="horizontal-bar-item">
+                <div class="bar-label">{{ incident.building }}</div>
+                <div class="bar-container">
+                  <!-- AJOUT DE LA CLASSE "incidents" ICI -->
+                  <div class="horizontal-bar incidents" [style.width.%]="incident.incidents * 10"></div>`
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Interventions par fournisseur -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Interventions par fournisseur</h3>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color electricity"></span>
+                <span>Électricité</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color plumbing"></span>
+                <span>Plomberie</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-content">
+            <div class="grouped-bar-chart">
+              <div *ngFor="let supplier of supplierInterventions()" class="grouped-bar-item">
+                <div class="grouped-bars">
+                  <div class="bar electricity" [style.height.px]="supplier.electricity * 10"></div>
+                  <div class="bar plumbing" [style.height.px]="supplier.plumbing * 10"></div>
+                </div>
+                <div class="bar-label">{{ supplier.supplier }}</div>
+              </div>
+            </div>
+            <!-- <div class="chart-y-axis">
+              <span>10</span>
+              <span>8</span>
+              <span>6</span>
+              <span>4</span>
+              <span>2</span>
+              <span>0</span>
+            </div> -->
+          </div>
+        </div>
+  
+        <!-- Coût moyen par type -->
+        <div class="chart-card full-width">
+          <div class="chart-header">
+            <h3>Coût moyen par type de travaux</h3>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color cost"></span>
+                <span>Coût moyen en (Fcfa)</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-content">
+            <div class="horizontal-bar-chart large">
+              <div *ngFor="let cost of workTypeCosts()" class="horizontal-bar-item">
+                <div class="bar-label">{{ cost.type }}</div>
+                <div class="bar-container">
+                  <div class="horizontal-bar cost" [style.width.%]="(cost.cost / 1600) * 100"></div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="chart-scale large">
+              <span>0</span>
+              <span>200</span>
+              <span>400</span>
+              <span>600</span>
+              <span>800</span>
+              <span>1000</span>
+              <span>1200</span>
+              <span>1400</span>
+              <span>1600</span>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

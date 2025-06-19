@@ -1,1 +1,92 @@
-<p>users works!</p>
+<div class="p-6 bg-gray-50 min-h-screen">
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">Gestion des Utilisateurs</h1>
+    <p class="text-gray-600 mb-6">Gérer les accès et l'activité de la plateforme</p>
+
+    <!-- Nouvelle section des statistiques principales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Carte Utilisateurs actifs -->
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <h2 class="text-3xl font-bold text-gray-800">156</h2>
+            <p class="text-gray-600 text-sm">Utilisateurs actifs</p>
+        </div>
+        
+        <!-- Carte Connexions ce mois -->
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <h2 class="text-3xl font-bold text-gray-800">1,248</h2>
+            <p class="text-gray-600 text-sm">Connexions ce mois</p>
+        </div>
+        
+        <!-- Carte Administrateurs -->
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <h2 class="text-3xl font-bold text-gray-800">12</h2>
+            <p class="text-gray-600 text-sm">Administrateurs</p>
+        </div>
+    </div>
+
+    <!-- Première ligne avec deux cartes principales -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <!-- Carte Répartition par rôle (35%) -->
+      <div class="bg-white p-6 rounded-lg shadow lg:col-span-1">
+        <h2 class="text-4xl font-bold text-gray-800 mb-2">156</h2>
+        <p class="text-gray-600 mb-4">Utilisateurs actifs</p>
+        <h3 class="font-semibold text-gray-700 mb-2">Répartition par rôle</h3>
+        <div class="h-40">
+          <canvas id="roleChart"></canvas>
+        </div>
+      </div>
+  
+      <!-- Carte Connexions mensuelles (65%) -->
+      <div class="bg-white p-6 rounded-lg shadow lg:col-span-2">
+        <h2 class="text-4xl font-bold text-gray-800 mb-2">1,248</h2>
+        <p class="text-gray-600 mb-4">Connexions ce mois</p>
+        <h3 class="font-semibold text-gray-700 mb-2">Connexions mensuelles / actives</h3>
+        <div class="h-40">
+          <canvas id="connectionsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Deuxième ligne avec deux cartes -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- Carte Taux d'utilisation -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="font-semibold text-gray-700 mb-2">Taux d'utilisation des fonctionnalités</h3>
+        <div class="h-48">
+          <canvas id="usageChart"></canvas>
+        </div>
+      </div>
+  
+      <!-- Carte Connexions échouées -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="font-semibold text-gray-700 mb-2">Connexions échouées (avec seuil d'alerte)</h3>
+        <div class="h-48">
+          <canvas id="failedLoginsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Carte Dernière connexion par utilisateur -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="font-semibold text-gray-700 mb-4">Dernière connexion par utilisateur</h3>
+      
+      <div class="space-y-4">
+        <div class="border-b pb-3">
+          <p class="font-medium text-gray-800">Cheikh Gueye</p>
+          <p class="text-sm text-gray-500">10/04/2025 14:30</p>
+          <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded mt-1">Admin</span>
+        </div>
+        
+        <div class="border-b pb-3">
+          <p class="font-medium text-gray-800">Awa Ndiaye</p>
+          <p class="text-sm text-gray-500">08/04/2025 09:15</p>
+          <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded mt-1">Utilisateur</span>
+        </div>
+        
+        <div class="pb-3">
+          <p class="font-medium text-gray-800">Omar Ba</p>
+          <p class="text-sm text-gray-500">05/04/2025 16:45</p>
+          <span class="inline-block px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded mt-1">Consultant</span>
+        </div>
+      </div>
+    </div>
+</div>

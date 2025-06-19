@@ -1,0 +1,187 @@
+<!-- fournisseurs.component.html -->
+<div class="fournisseurs-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="breadcrumb">
+      <span class="breadcrumb-item">Tableau de bord</span>
+      <span class="breadcrumb-separator">></span>
+      <span class="breadcrumb-item active">Fournisseurs</span>
+    </div>
+    <div class="header-actions">
+      <div class="notification-bell">
+        <i class="bell-icon"></i>
+        <span class="notification-dot"></span>
+      </div>
+      <div class="theme-toggle">
+        <i class="theme-icon"></i>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">
+          <span>CG</span>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Cheikh Gueye</span>
+          <span class="user-role">Administrateur</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title Section -->
+  <div class="title-section">
+    <h1>Gestion des Fournisseurs</h1>
+    <p class="subtitle">Suivre les prestataires et les engagements financiers</p>
+    
+    <div class="controls">
+      <div class="filters">
+        <select class="filter-select" (change)="onFilterChange('periode', $event)">
+          <option value="Période">📅 Période</option>
+          <option value="Aujourd'hui">Aujourd'hui</option>
+          <option value="Cette semaine">Cette semaine</option>
+          <option value="Ce mois">Ce mois</option>
+        </select>
+        
+        <select class="filter-select" (change)="onFilterChange('region', $event)">
+          <option value="Région">📍 Région</option>
+          <option value="Dakar">Dakar</option>
+          <option value="Thiès">Thiès</option>
+          <option value="Saint-Louis">Saint-Louis</option>
+        </select>
+      </div>
+      
+      <button class="export-btn" (click)="onExport()">
+        📤 Exporter
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        👥
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ fournisseurStats().fournisseursActifs }}</div>
+        <div class="stat-label">Fournisseurs actifs</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        📋
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ fournisseurStats().contratsEnCours }}</div>
+        <div class="stat-label">Contrats en cours</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        ⭐
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ fournisseurStats().tauxSatisfaction }}/5</div>
+        <div class="stat-label">Taux de satisfaction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-grid">
+    <!-- Répartition par spécialité -->
+    <div class="chart-card">
+      <h3>Répartition par spécialité</h3>
+      <div class="pie-chart-container">
+        <div class="chart-wrapper">
+          <canvas id="pieChart" width="200" height="200"></canvas>
+        </div>
+        <div class="pie-legend">
+          <div class="legend-item" *ngFor="let item of specialiteData()">
+            <span class="legend-color" [style.background-color]="item.color"></span>
+            <span class="legend-text">{{ item.specialite }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Montant facturé vs payé -->
+    <div class="chart-card">
+      <h3>Montant facturé vs payé (%)</h3>
+      <div class="donut-chart-container">
+        <div class="chart-wrapper">
+          <canvas id="donutChart" width="180" height="180"></canvas>
+          <div class="percentage-badge">20%</div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #4285f4;"></span>
+            <span class="legend-text">Montant facturé</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #a8c7fa;"></span>
+            <span class="legend-text">Montant payé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bar Charts Section -->
+  <div class="bar-charts-grid">
+    <!-- Contrats actifs par fournisseur -->
+    <div class="chart-card">
+      <h3>Contrats actifs par fournisseur</h3>
+      <div class="bar-chart-wrapper">
+        <canvas id="contractsChart" width="400" height="280"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item">
+          <span class="legend-color" style="background-color: #4285f4;"></span>
+          <span class="legend-text">Contrats actifs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Montant engagé par fournisseur -->
+    <div class="chart-card">
+      <h3>Montant engagé par fournisseur</h3>
+      <div class="bar-chart-wrapper">
+        <canvas id="montantChart" width="400" height="280"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item">
+          <span class="legend-color" style="background-color: #4285f4;"></span>
+          <span class="legend-text">Montant en (Fcfa)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historique des interventions -->
+  <div class="history-section">
+    <h3>Historique des interventions</h3>
+    <div class="history-list">
+      <div class="history-item" *ngFor="let intervention of interventionsHistorique()">
+        <div class="history-icon" [ngClass]="intervention.icon">
+          <span class="history-icon-symbol">
+            @switch (intervention.icon) {
+              @case ('maintenance') { 🔧 }
+              @case ('delivery') { 📦 }
+              @case ('security') { 🔒 }
+              @default { 📋 }
+            }
+          </span>
+        </div>
+        <div class="history-content">
+          <div class="history-title">{{ intervention.type }}</div>
+          <div class="history-meta">
+            <span class="history-date">{{ intervention.date }} {{ intervention.time }}</span>
+            <span class="history-provider">{{ intervention.fournisseur }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

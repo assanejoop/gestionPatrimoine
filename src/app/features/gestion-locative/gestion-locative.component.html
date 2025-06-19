@@ -1,0 +1,251 @@
+<div class="min-h-screen bg-gray-50 font-sans">
+  <!-- Header -->
+  <div class="flex justify-between items-center bg-white p-4 border-b border-gray-200">
+    <div class="flex items-center text-gray-500 text-sm">
+      <span class="text-gray-500">Tableau de bord</span>
+      <span class="mx-2 text-gray-400">></span>
+      <span class="text-gray-900 font-medium">Locations</span>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <div class="relative p-2 rounded-full bg-gray-100 cursor-pointer">
+        <span class="text-lg">🔔</span>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">1</span>
+      </div>
+      <div class="p-2 rounded-full bg-gray-100 cursor-pointer">
+        <span class="text-lg">🌙</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <img src="https://via.placeholder.com/32x32" alt="Cheikh Gueye" class="w-8 h-8 rounded-full object-cover">
+        <div class="flex flex-col">
+          <span class="text-sm font-medium text-gray-900">Cheikh Gueye</span>
+          <span class="text-xs text-gray-500">Administrateur</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Header -->
+  <div class="flex justify-between items-start p-8 pb-4">
+    <div>
+      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Gestion Locative</h1>
+      <p class="text-gray-500 text-sm">Suivi des biens loués, des paiements et échéances</p>
+    </div>
+    
+    <div class="flex gap-4 items-center">
+      <select class="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm cursor-pointer" 
+              [value]="selectedPeriod()" 
+              (change)="onPeriodChange($any($event.target).value)">
+        <option value="Mensuel">Période</option>
+        <option value="Trimestriel">Trimestriel</option>
+        <option value="Annuel">Annuel</option>
+      </select>
+      
+      <select class="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm cursor-pointer"
+              [value]="selectedRegion()" 
+              (change)="onRegionChange($any($event.target).value)">
+        <option value="Toutes les régions">Région</option>
+        <option value="Dakar">Dakar</option>
+        <option value="Saint-Louis">Saint-Louis</option>
+        <option value="Thiès">Thiès</option>
+      </select>
+      
+      <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              (click)="exportData()">
+        <span>📥</span>
+        Exporter
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-8 mb-8">
+    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+      <div class="flex-1">
+        <div class="text-2xl font-bold text-gray-900 mb-1">{{ formatNumber(stats().totalProperties) }}</div>
+        <div class="text-gray-500 text-sm mb-2">Biens loués</div>
+        <div class="flex items-center gap-1 text-xs text-green-600">
+          <span>📈</span>
+          +5 nouveaux cette année
+        </div>
+      </div>
+      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
+        🏢
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+      <div class="flex-1">
+        <div class="text-2xl font-bold text-gray-900 mb-1">{{ stats().monthlyRent }}M€</div>
+        <div class="text-gray-500 text-sm mb-2">Loyers mensuels</div>
+        <div class="flex items-center gap-1 text-xs text-yellow-600">
+          <span>⚠️</span>
+          02 En litige
+        </div>
+      </div>
+      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
+        💰
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+      <div class="flex-1">
+        <div class="text-2xl font-bold text-gray-900 mb-1">{{ stats().activeContracts }}</div>
+        <div class="text-gray-500 text-sm mb-2">Contrats actifs</div>
+        <div class="text-xs text-gray-500">
+          82%
+        </div>
+      </div>
+      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
+        📋
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+      <div class="flex-1">
+        <div class="text-2xl font-bold text-gray-900 mb-1">{{ stats().paymentRate }}%</div>
+        <div class="text-gray-500 text-sm mb-2">Taux de paiement</div>
+        <div class="text-xs text-gray-500">
+          20 000 000 Fcfa
+        </div>
+      </div>
+      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
+        💳
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section - Alignées 2 par 2 -->
+  <div class="px-8 mb-8 space-y-6">
+    <!-- Première ligne - 2 graphiques -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Payment Rate Pie Chart -->
+      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Taux de paiement à échéance</h3>
+        <div class="flex items-center gap-8">
+          <div class="relative w-32 h-32">
+            <canvas #paymentRateChart></canvas>
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="text-2xl font-bold text-gray-900">{{ paymentOnTime() }}%</div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-green-500 rounded-sm"></div>
+              <span class="text-sm text-gray-600">Payé à temps</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-red-500 rounded-sm"></div>
+              <span class="text-sm text-gray-600">Retard</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Rent Chart -->
+      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Montant des loyers mensuels</h3>
+          <select class="px-2 py-1 border border-gray-300 rounded text-xs">
+            <option>Mensuel</option>
+          </select>
+        </div>
+        <div class="h-48">
+          <canvas #monthlyRentChart></canvas>
+        </div>
+        <div class="flex items-center gap-2 mt-4">
+          <div class="w-3 h-3 bg-blue-500 rounded-sm"></div>
+          <span class="text-sm text-gray-600">Montant en (Fcfa)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deuxième ligne - 2 graphiques -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Expiring Contracts Chart -->
+      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Contrats expirant dans 3 mois</h3>
+          <select class="px-2 py-1 border border-gray-300 rounded text-xs">
+            <option>Mensuel</option>
+          </select>
+        </div>
+        <div class="h-48">
+          <canvas #contractExpirationChart></canvas>
+        </div>
+      </div>
+
+      <!-- Payment Delays Chart -->
+      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Retards de paiement</h3>
+        <div class="flex items-center gap-4 mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-red-500 rounded-sm"></div>
+            <span class="text-sm text-gray-600">Nombre</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-green-500 rounded-sm"></div>
+            <span class="text-sm text-gray-600">Montant</span>
+          </div>
+        </div>
+        <div class="h-40">
+          <canvas #paymentDelayChart></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Troisième ligne - 2 graphiques -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Ministry Distribution Chart -->
+      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Répartition loyers par ministère</h3>
+        <div class="flex items-center gap-8">
+          <div class="relative w-32 h-32">
+            <canvas #ministryDistributionChart></canvas>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2" *ngFor="let ministry of ministryDistribution()">
+              <div class="w-3 h-3 rounded-sm" [style.background-color]="ministry.color"></div>
+              <span class="text-sm text-gray-600">{{ ministry.ministry }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regional Costs Chart -->
+      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Coût moyen mensuel par région</h3>
+          <select class="px-2 py-1 border border-gray-300 rounded text-xs">
+            <option>Région</option>
+          </select>
+        </div>
+        <div class="flex gap-2 mb-4 border-b border-gray-200">
+          <button class="px-4 py-2 text-sm font-medium transition-colors"
+                  [class.text-blue-600]="selectedTab() === 'Indicateur'"
+                  [class.border-b-2]="selectedTab() === 'Indicateur'"
+                  [class.border-blue-600]="selectedTab() === 'Indicateur'"
+                  [class.text-gray-600]="selectedTab() !== 'Indicateur'"
+                  (click)="onTabChange('Indicateur')">
+            Indicateur
+          </button>
+          <button class="px-4 py-2 text-sm font-medium transition-colors"
+                  [class.text-blue-600]="selectedTab() === 'Carte interactive'"
+                  [class.border-b-2]="selectedTab() === 'Carte interactive'"
+                  [class.border-blue-600]="selectedTab() === 'Carte interactive'"
+                  [class.text-gray-600]="selectedTab() !== 'Carte interactive'"
+                  (click)="onTabChange('Carte interactive')">
+            Carte interactive
+          </button>
+        </div>
+        <div class="h-48">
+          <canvas #regionalCostChart></canvas>
+        </div>
+        <div class="flex items-center gap-2 mt-4">
+          <div class="w-3 h-3 bg-blue-500 rounded-sm"></div>
+          <span class="text-sm text-gray-600">Montant en (Fcfa)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

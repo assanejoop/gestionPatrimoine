@@ -1,0 +1,225 @@
+<div class="min-h-screen bg-gray-50 p-6">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Géolocalisation et Densité</h1>
+          <p class="text-gray-600 mt-1">Visualiser la couverture spatiale et la densité immobilière</p>
+        </div>
+        
+        <!-- Controls -->
+        <div class="flex items-center space-x-4">
+          <!-- Période Filter -->
+          <div class="relative">
+            <select 
+              class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+              <option value="all">Période</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+              </svg>
+            </div>
+          </div>
+  
+          <!-- Région Filter -->
+          <div class="relative">
+            <select 
+              class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+              <option value="all">Région</option>
+              <option value="dakar">Dakar</option>
+              <option value="pikine">Pikine</option>
+              <option value="guediawaye">Guédiawaye</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+              </svg>
+            </div>
+          </div>
+  
+          <!-- Export Button -->
+          <button 
+            (click)="exportData()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <span>Exporter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Bâtiments géolocalisés -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-3xl font-bold text-gray-900">{{ stats().geolocalizedBuildings }}</h3>
+            <p class="text-gray-600 mt-1">Bâtiments géolocalisés</p>
+          </div>
+          <div class="p-3 bg-blue-100 rounded-lg">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Sans coordonnées -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-3xl font-bold text-gray-900">{{ stats().nonGeolocalizedBuildings }}</h3>
+            <p class="text-gray-600 mt-1">Sans coordonnées</p>
+          </div>
+          <div class="p-3 bg-red-100 rounded-lg">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Taux de complétion -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-3xl font-bold text-gray-900">{{ stats().completionRate }}%</h3>
+            <p class="text-gray-600 mt-1">Taux de complétion</p>
+          </div>
+          <div class="p-3 bg-green-100 rounded-lg">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Map Container -->
+      <div class="lg:col-span-3">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="relative">
+            <!-- Carte statique -->
+            <img 
+              src="../assets/images/carte.jpeg" 
+              alt="Carte de géolocalisation"
+              class="w-full h-96 object-cover"
+            />
+            
+            <!-- Marqueurs des bâtiments -->
+            <div class="absolute inset-0">
+              <!-- Bâtiments géolocalisés (marqueurs bleus) -->
+              <div 
+                *ngFor="let building of geolocalizedBuildings()" 
+                class="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                [style.left.%]="(building.coordinates[1] + 17.4441) * 1000"
+                [style.top.%]="(14.6937 - building.coordinates[0]) * 1000"
+                (click)="onBuildingClick(building)">
+                <div class="w-8 h-8 bg-blue-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-200">
+                  <span class="text-white text-xs font-bold">{{ building.type }}</span>
+                </div>
+              </div>
+  
+              <!-- Bâtiments non géolocalisés (marqueurs rouges) -->
+              <div 
+                *ngFor="let building of nonGeolocalizedBuildings()" 
+                class="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                [style.left.%]="(building.coordinates[1] + 17.4441) * 1000"
+                [style.top.%]="(14.6937 - building.coordinates[0]) * 1000"
+                (click)="onBuildingClick(building)">
+                <div class="w-8 h-8 bg-red-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-200">
+                  <span class="text-white text-xs font-bold">{{ building.type }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Légende -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Légende</h3>
+          <div class="space-y-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-4 h-4 bg-blue-600 rounded-full"></div>
+              <span class="text-sm text-gray-700">Bâtiments géolocalisés</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-4 h-4 bg-red-600 rounded-full"></div>
+              <span class="text-sm text-gray-700">Bâtiments sans coordonnées GPS</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Détails du bâtiment sélectionné -->
+        <div *ngIf="selectedBuilding()" class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Détails</h3>
+          <div class="space-y-3">
+            <div>
+              <span class="text-sm font-medium text-gray-500">Nom:</span>
+              <p class="text-sm text-gray-900">{{ selectedBuilding()?.name }}</p>
+            </div>
+            <div>
+              <span class="text-sm font-medium text-gray-500">Type:</span>
+              <p class="text-sm text-gray-900">{{ selectedBuilding()?.type }}</p>
+            </div>
+            <div>
+              <span class="text-sm font-medium text-gray-500">Statut:</span>
+              <p class="text-sm" [class]="selectedBuilding()?.isGeolocalized ? 'text-green-600' : 'text-red-600'">
+                {{ selectedBuilding()?.isGeolocalized ? 'Géolocalisé' : 'Non géolocalisé' }}
+              </p>
+            </div>
+            <div *ngIf="selectedBuilding()?.isGeolocalized">
+              <span class="text-sm font-medium text-gray-500">Coordonnées:</span>
+              <p class="text-sm text-gray-900">
+              </p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Statistiques rapides -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Résumé</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Total bâtiments:</span>
+              <span class="text-sm font-semibold text-gray-900">{{ stats().totalBuildings }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Géolocalisés:</span>
+              <span class="text-sm font-semibold text-green-600">{{ stats().geolocalizedBuildings }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm text-gray-600">Manquants:</span>
+              <span class="text-sm font-semibold text-red-600">{{ stats().nonGeolocalizedBuildings }}</span>
+            </div>
+            <div class="pt-2 border-t">
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Progression:</span>
+                <span class="text-sm font-semibold text-blue-600">{{ getCompletionPercentage() }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div 
+                  class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  [style.width.%]="getCompletionPercentage()">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

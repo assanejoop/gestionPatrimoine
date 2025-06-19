@@ -17,6 +17,43 @@ export class SidebarComponent implements OnInit {
       expanded: false,
       route: '/dashboard'
     },
+    // 
+    { 
+      name: 'Geolocatisation et Densité', 
+      icon: 'localisation', 
+      expanded: false,
+      route: '/dashboard/geolocalisation'
+    },
+    { 
+      name: 'Documents et Archivage', 
+      icon: 'documents', 
+      expanded: false,
+      route: '/dashboard/documents-archivage'
+    },
+    { 
+      name: 'Travaux Maintenance', 
+      icon: 'documents', 
+      expanded: false,
+      route: '/dashboard/travaux-maintenance'
+    },
+    { 
+      name: 'Gestion Locative', 
+      icon: 'localisation', 
+      expanded: false,
+      route: '/dashboard/gestion-locative'
+    },
+    { 
+      name: 'Fournisseurs', 
+      icon: 'localisation', 
+      expanded: false,
+      route: '/dashboard/fournisseurs'
+    },
+    { 
+      name: 'Utilisateurs et Accès', 
+      icon: 'utilisateurs', 
+      expanded: false,
+      route: '/dashboard/utilisateurs'
+    },
     { 
       name: 'Biens immobiliers', 
       icon: 'buildings', 

@@ -30,10 +30,16 @@
           (click)="item.subItems && $event.preventDefault(); item.subItems && toggleSubmenu(i)"
         >
           <div class="flex items-center">
-            <!-- Use correct icon based on name -->
+            <!-- Use correct icon based on name  -->
             <ng-container [ngSwitch]="item.icon">
               <img *ngSwitchCase="'dashboard'" src="assets/images/icones/Settings.svg" alt="" class="h-6 w-6">
+              <img *ngSwitchCase="'localisation'" src="assets/images/icones/location.svg" alt="" class="h-6 w-6">
+              <img *ngSwitchCase="'documents'" src="assets/images/icones/other.png" alt="" class="h-6 w-6">
+
               <img *ngSwitchCase="'buildings'" src="assets/images/icones/hand.svg" alt="" class="h-6 w-6">
+              <svg *ngSwitchCase="'utilisateurs'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
               <svg *ngSwitchCase="'users'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>

@@ -1,0 +1,339 @@
+/* Styles additionnels pour le dashboard */
+
+/* Animations pour les graphiques */
+.chart-bar {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .chart-bar:hover {
+    transform: scaleY(1.05);
+  }
+  
+  /* Styles pour les cartes de statistiques */
+  .stat-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Animation pour les graphiques circulaires */
+  .progress-circle {
+    transition: stroke-dasharray 0.3s ease-in-out;
+  }
+  
+  /* Styles pour les positions des régions sur la carte */
+  .region-dakar { top: 45%; left: 8%; width: 60px; height: 30px; }
+  .region-thies { top: 40%; left: 15%; width: 50px; height: 25px; }
+  .region-saint-louis { top: 15%; left: 12%; width: 70px; height: 30px; }
+  .region-louga { top: 28%; left: 18%; width: 50px; height: 25px; }
+  .region-diourbel { top: 48%; left: 25%; width: 60px; height: 30px; }
+  .region-fatick { top: 55%; left: 30%; width: 50px; height: 25px; }
+  .region-kaolack { top: 50%; left: 35%; width: 60px; height: 30px; }
+  .region-kaffrine { top: 45%; left: 45%; width: 60px; height: 30px; }
+  .region-tambacounda { top: 40%; left: 65%; width: 80px; height: 35px; }
+  .region-kedougou { top: 65%; left: 70%; width: 70px; height: 30px; }
+  .region-kolda { top: 72%; left: 45%; width: 50px; height: 25px; }
+  .region-sedhiou { top: 68%; left: 35%; width: 60px; height: 30px; }
+  .region-ziguinchor { top: 85%; left: 25%; width: 70px; height: 30px; }
+  .region-matam { top: 25%; left: 55%; width: 50px; height: 25px; }
+  
+  /* Styles pour les dropdowns */
+  .custom-select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    padding-right: 32px;
+  }
+  
+  /* Styles pour les tooltips */
+  .tooltip {
+    position: relative;
+  }
+  
+  .tooltip:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+  }
+  
+  /* Styles pour les graphiques en barres */
+  .bar-chart {
+    display: flex;
+    align-items: end;
+    height: 200px;
+    gap: 12px;
+    padding: 16px 0;
+  }
+  
+  .bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .bar {
+    width: 100%;
+    max-width: 40px;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s ease;
+  }
+  
+  .bar:hover {
+    opacity: 0.8;
+    transform: scaleY(1.05);
+  }
+  
+  /* Styles pour les graphiques en secteurs */
+  .pie-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  /* Styles pour la carte */
+  .map-container {
+    position: relative;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .map-region {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .map-region:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Styles pour les légendes de densité */
+  .density-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  
+  .density-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .density-color {
+    width: 16px;
+    height: 8px;
+    border-radius: 2px;
+  }
+  
+  /* Styles pour les notifications */
+  .notification-badge {
+    position: relative;
+  }
+  
+  .notification-badge::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  
+  /* Styles pour les boutons */
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    transition: all 0.2s ease;
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Styles pour les cartes avec ombre */
+  .card-shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .card-shadow:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Styles pour les animations d'entrée */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-slide-in {
+    animation: slideInUp 0.6s ease-out;
+  }
+  
+  /* Styles pour les états de survol */
+  .hover-scale {
+    transition: transform 0.2s ease;
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Styles responsifs */
+  @media (max-width: 768px) {
+    .region-label {
+      font-size: 8px;
+      padding: 2px 4px;
+    }
+    
+    .stat-card {
+      padding: 16px;
+    }
+    
+    .chart-container {
+      height: 250px;
+    }
+    
+    .map-container {
+      height: 300px;
+    }
+  }
+
+  /* Ajoutez ces styles à votre fichier dashboard.component.css */
+
+/* Styles pour les barres horizontales */
+.horizontal-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+.horizontal-bar:hover {
+  opacity: 0.9;
+}
+
+/* Animation pour les graphiques circulaires */
+.progress-circle {
+  transition: stroke-dasharray 0.6s ease-in-out;
+}
+
+/* Styles pour le point de progression */
+.progress-dot {
+  transition: all 0.6s ease-in-out;
+  box-shadow: 0 2px 4px rgba(168, 85, 247, 0.4);
+}
+
+/* Animation d'entrée pour les barres */
+@keyframes slideInWidth {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width);
+  }
+}
+
+/* Animation d'entrée pour le cercle de progression */
+@keyframes drawCircle {
+  from {
+    stroke-dasharray: 0 251.33;
+  }
+  to {
+    stroke-dasharray: var(--progress-dasharray);
+  }
+}
+
+/* Styles pour améliorer l'apparence des graphiques */
+.chart-container {
+  position: relative;
+}
+
+.chart-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.chart-container:hover::before {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .horizontal-bar {
+    height: 6px;
+  }
+  
+  .horizontal-bar span {
+    font-size: 10px;
+  }
+  
+  .progress-dot {
+    width: 12px;
+    height: 12px;
+  }
+}

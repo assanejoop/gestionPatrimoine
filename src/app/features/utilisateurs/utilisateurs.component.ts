@@ -1,21 +1,24 @@
-import { Component } from '@angular/core';
-import { Chart } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import Chart from 'chart.js/auto';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
 
+// Enregistrez uniquement le plugin d'annotation
+import annotationPlugin from 'chartjs-plugin-annotation';
+Chart.register(annotationPlugin);
+
 @Component({
-  selector: 'app-users',
-  standalone: true,
-  imports: [],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  standalone:true,
+  selector: 'app-utilisateurs',
+  templateUrl: './utilisateurs.component.html',
+  styleUrls: ['./utilisateurs.component.css']
 })
-export class UsersComponent {
+export class UtilisateursComponent implements OnInit {
 
   constructor() { }
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.createRoleChart();
+      this.createRoleChart(); 
       this.createConnectionsChart();
       this.createUsageChart();
       this.createFailedLoginsChart();
@@ -130,11 +133,11 @@ export class UsersComponent {
           label: 'Utilisation (%)',
           data: [85, 72, 58, 45, 30],
           backgroundColor: [
-            '#2388ff', // blue-500
-            '#2388ff', // emerald-500
-            '#2388ff', // violet-500
-            '#2388ff', // amber-500
-            '#2388ff'  // red-500
+            '#3B82F6', // blue-500
+            '#10B981', // emerald-500
+            '#8B5CF6', // violet-500
+            '#F59E0B', // amber-500
+            '#EF4444'  // red-500
           ],
           borderRadius: 4,
           borderSkipped: false
@@ -184,7 +187,7 @@ export class UsersComponent {
       borderDash: [6, 6],
       label: {
         content: 'Seuil d\'alerte',
-        position: 'end' as const,
+        position: 'end' as const, // Correction ici - utilisez 'end' au lieu de 'right'
         backgroundColor: 'rgba(239, 68, 68, 0.8)',
         color: 'white',
         font: {
@@ -205,11 +208,9 @@ export class UsersComponent {
         datasets: [{
           label: 'Connexions échouées',
           data: [12, 19, 15, 8, 11, 6],
-          backgroundColor: '#fead80',
+          backgroundColor: '#EF4444',
           borderRadius: 4,
-          borderSkipped: false,
-          barPercentage: 0.5, // Réduit la largeur des barres
-          categoryPercentage: 0.8 // Ajuste l'espace entre les barres
+          borderSkipped: false
         }]
       },
       options: {
@@ -228,11 +229,6 @@ export class UsersComponent {
         scales: {
           y: {
             beginAtZero: true
-          },
-          x: {
-            grid: {
-              display: false
-            }
           }
         }
       }
