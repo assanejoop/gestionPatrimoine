@@ -35,6 +35,8 @@ export class AnalyseFinanciereComponent implements OnInit {
             backgroundColor: '#FB923C',
             borderRadius: 8,
             borderSkipped: false,
+            barPercentage: 0.5, // Réduit la largeur des barres (valeur entre 0 et 1)
+            categoryPercentage: 0.8 // Ajuste l'espace entre les groupes de barres
           }]
         },
         options: {

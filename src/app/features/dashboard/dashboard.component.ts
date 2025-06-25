@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, signal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
@@ -35,7 +35,7 @@ interface RegionData {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   
   @ViewChild('barChart', { static: false }) barChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('completionChart', { static: false }) completionChartRef!: ElementRef<HTMLCanvasElement>;
@@ -52,126 +52,123 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     {
       title: 'Biens immobiliers',
       value: 1500,
-      subtitle: '',
+      subtitle: 'Total des biens',
       trend: { value: 5, label: 'nouveaux cette année', isPositive: true },
-      icon: 'home'
+      icon: '🏠'
     },
     {
       title: 'En location',
       value: 963,
-      subtitle: '',
+      subtitle: 'Propriétés louées',
       trend: { value: 20, label: 'nouveaux ce mois-ci', isPositive: true },
-      icon: 'key'
+      icon: '🏘️'
     },
     {
       title: 'En copropriété',
       value: 127,
-      subtitle: 'En litige',
-      trend: { value: 2, label: '', isPositive: false },
-      icon: 'building'
+      subtitle: 'Unités en copropriété',
+      trend: { value: 2, label: 'En litige', isPositive: false },
+      icon: '🏢'
     },
     {
       title: 'Bâtiments occupés',
       value: 1090,
-      subtitle: '',
+      subtitle: 'Unités occupées',
       trend: { value: 20, label: 'cette année', isPositive: true },
-      icon: 'users'
+      icon: '👥'
     },
     {
-      title: 'Bâtiments',
+      title: 'Bâtiments vacants',
       value: 410,
-      subtitle: '',
-      trend: { value: 40, label: '', isPositive: false },
-      icon: 'building-2'
+      subtitle: 'Unités vacantes',
+      trend: { value: 40, label: 'cette année', isPositive: false },
+      icon: '🏗️'
+    }
+    ,
+    {
+      title: 'Bâtiments vacants',
+      value: 410,
+      subtitle: 'Unités vacantes',
+      trend: { value: 40, label: 'cette année', isPositive: false },
+      icon: '🏗️'
     }
   ]);
 
-  // Données pour le graphique en barres
-  buildingDocumentsData = signal<ChartData[]>([
-    { name: 'Education', value: 950 },
-    { name: 'Intérieur', value: 1450 },
+  barChartData = signal<ChartData[]>([
+    { name: 'Éducation', value: 1000 },
+    { name: 'Intérieur', value: 1500 },
     { name: 'Justice', value: 1300 },
     { name: 'Autres', value: 1100 }
   ]);
 
-  // Taux de complétion
-  completionRate = signal(40);
+  completionRate = signal<number>(40);
 
-  // Données pour le graphique en donut
-  revenueData = signal({
+  revenueData = signal<{ occupied: number; vacant: number }>({
     occupied: 80,
     vacant: 20
   });
 
-  // Données de géolocalisation
-  geoData = signal({
+  geoData = signal<{ withGPS: number; withoutGPS: number }>({
     withGPS: 75,
     withoutGPS: 25
   });
 
-  // Régions avec densité
-  regions = signal<RegionData[]>([
-    { name: 'Dakar', density: 85 },
-    { name: 'Saint-Louis', density: 45 },
-    { name: 'Thiès', density: 60 },
-    { name: 'Kaolack', density: 35 },
-    { name: 'Ziguinchor', density: 25 },
-    { name: 'Tambacounda', density: 15 },
-    { name: 'Kolda', density: 20 },
-    { name: 'Matam', density: 30 },
-    { name: 'Kaffrine', density: 40 },
-    { name: 'Kédougou', density: 10 },
-    { name: 'Sédhiou', density: 18 },
-    { name: 'Fatick', density: 25 },
-    { name: 'Louga', density: 35 },
-    { name: 'Diourbel', density: 50 }
-  ]);
+  selectedPeriod = signal<string>('Cette année');
+  selectedRegion = signal<string>('Toutes les régions');
 
-  selectedPeriod = signal('2024');
-  selectedRegion = signal('Toutes les régions');
-
-  periods = signal(['2024', '2023', '2022', '2021']);
-  regionsList = signal(['Toutes les régions', 'Dakar', 'Saint-Louis', 'Thiès', 'Kaolack']);
-
-  ngOnInit() {
-    this.loadDashboardData();
+  ngOnInit(): void {
+    // Initialisation des données
   }
 
-  ngAfterViewInit() {
-    // Délai pour s'assurer que les éléments DOM sont prêts
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.initializeCharts();
     }, 100);
   }
 
-  private loadDashboardData() {
-    console.log('Chargement des données du dashboard...');
+  ngOnDestroy(): void {
+    this.destroyCharts();
   }
 
-  private initializeCharts() {
+  private initializeCharts(): void {
     this.createBarChart();
     this.createCompletionChart();
     this.createRevenueChart();
     this.createGeoChart();
   }
 
-  private createBarChart() {
+  private destroyCharts(): void {
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
+    if (this.completionChart) {
+      this.completionChart.destroy();
+    }
+    if (this.revenueChart) {
+      this.revenueChart.destroy();
+    }
+    if (this.geoChart) {
+      this.geoChart.destroy();
+    }
+  }
+
+  private createBarChart(): void {
     if (!this.barChartRef?.nativeElement) return;
 
     const ctx = this.barChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    const data = this.buildingDocumentsData();
+    const data = this.barChartData();
     
-    const config: ChartConfiguration = {
-      type: 'bar' as ChartType,
+    this.barChart = new Chart(ctx, {
+      type: 'bar',
       data: {
         labels: data.map(item => item.name),
         datasets: [{
           data: data.map(item => item.value),
-          backgroundColor: ['#60a5fa', '#3b82f6', '#1f2937', '#eab308'],
+          backgroundColor: ['#60A5FA', '#60A5FA', '#1F2937', '#F59E0B'],
           borderRadius: 4,
-          borderSkipped: false,
+          barThickness: 40
         }]
       },
       options: {
@@ -185,64 +182,78 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         scales: {
           y: {
             beginAtZero: true,
-            grid: {
-              display: false
-            },
+            max: 1600,
             ticks: {
-              display: false
+              stepSize: 200,
+              color: '#6B7280'
+            },
+            grid: {
+              color: '#E5E7EB'
             }
           },
           x: {
+            ticks: {
+              color: '#6B7280'
+            },
             grid: {
               display: false
-            },
-            ticks: {
-              font: {
-                size: 12
-              },
-              color: '#6b7280'
             }
           }
         }
       }
-    };
-
-    this.barChart = new Chart(ctx, config);
+    });
   }
 
-  private createCompletionChart() {
+  private createCompletionChart(): void {
     if (!this.completionChartRef?.nativeElement) return;
 
     const ctx = this.completionChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    const completionRate = this.completionRate();
+    const completion = this.completionRate();
     
-    const config: ChartConfiguration = {
-      type: 'doughnut' as ChartType,
+    this.completionChart = new Chart(ctx, {
+      type: 'doughnut',
       data: {
         datasets: [{
-          data: [completionRate, 100 - completionRate],
-          backgroundColor: ['#8b5cf6', '#e5e7eb'],
-          borderWidth: 0,
-          // cutout: '70%'
+          data: [completion, 100 - completion],
+          backgroundColor: ['#EC4899', '#F3F4F6'],
+          borderWidth: 0
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '80%',
         plugins: {
           legend: {
             display: false
           }
         }
-      }
-    };
-
-    this.completionChart = new Chart(ctx, config);
+      },
+      plugins: [{
+        id: 'centerText',
+        beforeDraw: (chart) => {
+          const ctx = chart.ctx;
+          ctx.save();
+          ctx.font = 'bold 48px Arial';
+          ctx.fillStyle = '#1F2937';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+          const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+          ctx.fillText(`${completion}%`, centerX, centerY - 10);
+          
+          ctx.font = '14px Arial';
+          ctx.fillStyle = '#6B7280';
+          ctx.fillText('Taux de complétion', centerX, centerY + 25);
+          ctx.restore();
+        }
+      }]
+    });
   }
 
-  private createRevenueChart() {
+  private createRevenueChart(): void {
     if (!this.revenueChartRef?.nativeElement) return;
 
     const ctx = this.revenueChartRef.nativeElement.getContext('2d');
@@ -250,32 +261,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     const revenue = this.revenueData();
     
-    const config: ChartConfiguration = {
-      type: 'doughnut' as ChartType,
+    this.revenueChart = new Chart(ctx, {
+      type: 'doughnut',
       data: {
         labels: ['Bâtiments occupés', 'Bâtiments vacants'],
         datasets: [{
           data: [revenue.occupied, revenue.vacant],
-          backgroundColor: ['#3b82f6', '#93c5fd'],
-          borderWidth: 0,
-          // cutout: '60%'
+          backgroundColor: ['#3B82F6', '#93C5FD'],
+          borderWidth: 0
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '60%',
         plugins: {
           legend: {
             display: false
           }
         }
       }
-    };
-
-    this.revenueChart = new Chart(ctx, config);
+    });
   }
 
-  private createGeoChart() {
+  private createGeoChart(): void {
     if (!this.geoChartRef?.nativeElement) return;
 
     const ctx = this.geoChartRef.nativeElement.getContext('2d');
@@ -283,87 +292,51 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     const geo = this.geoData();
     
-    const config: ChartConfiguration = {
-      type: 'doughnut' as ChartType,
+    this.geoChart = new Chart(ctx, {
+      type: 'doughnut',
       data: {
-        labels: ['Avec GPS', 'Sans GPS'],
+        labels: ['Bâtiments localisés avec coordonnées GPS', 'Bâtiments localisés sans coordonnées GPS'],
         datasets: [{
           data: [geo.withGPS, geo.withoutGPS],
-          backgroundColor: ['#3b82f6', '#e5e7eb'],
-          borderWidth: 0,
-          // cutout: '60%'
+          backgroundColor: ['#3B82F6', '#E5E7EB'],
+          borderWidth: 0
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '70%',
         plugins: {
           legend: {
             display: false
           }
         }
       }
-    };
-
-    this.geoChart = new Chart(ctx, config);
+    });
   }
 
-  onPeriodChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    if (target) {
-      this.selectedPeriod.set(target.value);
-      this.loadDashboardData();
-    }
+  onPeriodChange(period: string): void {
+    this.selectedPeriod.set(period);
+    // Actualiser les données selon la période
+    this.updateChartsData();
   }
 
-  onRegionChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    if (target) {
-      this.selectedRegion.set(target.value);
-      this.loadDashboardData();
-    }
+  onRegionChange(region: string): void {
+    this.selectedRegion.set(region);
+    // Actualiser les données selon la région
+    this.updateChartsData();
   }
 
-  exportData() {
-    console.log('Export des données...');
+  private updateChartsData(): void {
+    // Logique pour mettre à jour les données des graphiques
+    this.destroyCharts();
+    setTimeout(() => {
+      this.initializeCharts();
+    }, 100);
   }
 
-  getDensityColor(density: number): string {
-    if (density >= 70) return 'bg-red-800';
-    if (density >= 45) return 'bg-red-600';
-    if (density >= 25) return 'bg-orange-500';
-    if (density >= 10) return 'bg-orange-300';
-    return 'bg-orange-200';
-  }
-
-  getRegionPosition(regionName: string): string {
-    const positions: { [key: string]: string } = {
-      'Dakar': 'top: 45%; left: 8%; width: 60px; height: 30px;',
-      'Thiès': 'top: 40%; left: 15%; width: 50px; height: 25px;',
-      'Saint-Louis': 'top: 15%; left: 12%; width: 70px; height: 30px;',
-      'Louga': 'top: 28%; left: 18%; width: 50px; height: 25px;',
-      'Diourbel': 'top: 48%; left: 25%; width: 60px; height: 30px;',
-      'Fatick': 'top: 55%; left: 30%; width: 50px; height: 25px;',
-      'Kaolack': 'top: 50%; left: 35%; width: 60px; height: 30px;',
-      'Kaffrine': 'top: 45%; left: 45%; width: 60px; height: 30px;',
-      'Tambacounda': 'top: 40%; left: 65%; width: 80px; height: 35px;',
-      'Kédougou': 'top: 65%; left: 70%; width: 70px; height: 30px;',
-      'Kolda': 'top: 72%; left: 45%; width: 50px; height: 25px;',
-      'Sédhiou': 'top: 68%; left: 35%; width: 60px; height: 30px;',
-      'Ziguinchor': 'top: 85%; left: 25%; width: 70px; height: 30px;',
-      'Matam': 'top: 25%; left: 55%; width: 50px; height: 25px;'
-    };
-    
-    return positions[regionName] || 'top: 50%; left: 50%; width: 50px; height: 25px;';
-  }
-
-  ngOnDestroy() {
-    // Nettoyer les graphiques
-    if (this.barChart) this.barChart.destroy();
-    if (this.completionChart) this.completionChart.destroy();
-    if (this.revenueChart) this.revenueChart.destroy();
-    if (this.geoChart) this.geoChart.destroy();
+  exportData(): void {
+    // Logique d'exportation
+    console.log('Exportation des données...');
   }
 }
-
-// le html

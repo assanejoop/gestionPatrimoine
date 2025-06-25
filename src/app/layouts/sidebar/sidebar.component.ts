@@ -1,6 +1,7 @@
+// sidebar.component.ts
 import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,6 +10,8 @@ import { RouterModule } from '@angular/router';
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
+  private router = inject(Router);
+  
   currentTheme = signal<'light' | 'dark'>('light');
   menuItems = signal([
     { 
@@ -31,15 +34,15 @@ export class SidebarComponent implements OnInit {
       name: 'Utilisateurs', 
       icon: 'users', 
       expanded: false,
-      route: '/dashboard/users'
+      route: '/dashboard/utilisateurs'  // Correction: route vers utilisateurs
     },
     { 
       name: 'Biens immobiliers', 
       icon: 'buildings', 
-      expanded: false,
-      route: '/dashboard/building',
+      expanded: false,  // Changé à false par défaut
+      // Supprimé la route car on a des subItems
       subItems: [
-        { name: 'Liste des bâtiments', route: '/dashboard/building/list' },
+        { name: 'Liste des bâtiments', route: '/dashboard/building' },
         { name: 'Cartographie', route: '/dashboard/building/maps' }
       ]
     },
@@ -63,21 +66,17 @@ export class SidebarComponent implements OnInit {
 
   initTheme(): void {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      // Check if theme is stored in local storage
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark' || savedTheme === 'light') {
         this.currentTheme.set(savedTheme);
       } else {
-        // Check for system preference
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
           this.currentTheme.set('dark');
         }
       }
       
-      // Apply theme immediately
       this.applyTheme(this.currentTheme());
       
-      // Listen for system theme changes
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
         if (!localStorage.getItem('theme')) {
           this.setTheme(event.matches ? 'dark' : 'light');
@@ -102,6 +101,17 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  // Méthode améliorée pour gérer les clics sur les items
+  onMenuItemClick(item: any, index: number): void {
+    if (item.subItems) {
+      // Si l'item a des sous-items, on toggle l'expansion
+      this.toggleSubmenu(index);
+    } else if (item.route) {
+      // Si l'item a une route et pas de sous-items, on navigue
+      this.router.navigate([item.route]);
+    }
+  }
+
   toggleSubmenu(index: number): void {
     const items = this.menuItems();
     const updatedItems = [...items];
@@ -117,7 +127,8 @@ export class SidebarComponent implements OnInit {
   }
 
   logout(): void {
-    // Implement logout logic here
     console.log('Logging out...');
+    // Ajoutez ici votre logique de déconnexion
+    // Par exemple: this.router.navigate(['/login']);
   }
 }
