@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -26,6 +26,32 @@ export class HeaderComponent {
     { label: 'État du Patrimoine Immobilier', link: null, active: true }
   ];
   
+
+ 
+
+  isDropdownOpen = false;
+  selectedTheme = 'Clair';
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  selectTheme(theme: string) {
+    this.selectedTheme = theme;
+    this.isDropdownOpen = false;
+    // Ici vous pouvez ajouter la logique pour appliquer le thème
+    console.log('Thème sélectionné:', theme);
+  }
+
+  // Fermer le dropdown quand on clique ailleurs
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.theme-dropdown')) {
+      this.isDropdownOpen = false;
+    }
+  }
+
   // Toggle user menu dropdown
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;

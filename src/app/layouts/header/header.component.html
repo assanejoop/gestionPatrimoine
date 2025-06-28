@@ -1,31 +1,93 @@
 <!-- Breadcrumb Navigation -->
-<nav class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
+<nav class="flex items-center justify-between px-6 py-4 bg-[#F5F7FA]  border-gray-200">
   <!-- Left side - Breadcrumb -->
   <div class="flex items-center space-x-2 text-gray-600">
-    <span class="text-sm font-medium cursor-pointer hover:text-gray-800">Tableau de bord</span>
+    <span class="text-sm font-medium cursor-pointer hover:text-gray-800 text-secondary" >Tableau de bord</span>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
     </svg>
-    <span class="text-sm text-gray-800 font-medium">État du Patrimoine Immobilier</span>
+    <span class="text-sm  font-medium text-thrid" >État du Patrimoine Immobilier</span>
   </div>
   
   <!-- Right side - User actions -->
   <div class="flex items-center space-x-4">
     <!-- Notification bell -->
     <button class="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5V6a4 4 0 00-8 0v6l-5 5h5m0 0v1a3 3 0 006 0v-1m-6 0h6" />
-      </svg>
+   
+      <img src="assets/images/notif.png" alt="">
       <!-- Notification badge -->
-      <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+    
     </button>
     
     <!-- Theme toggle -->
-    <button class="p-2 rounded-full hover:bg-gray-100 transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+  <div class="relative theme-dropdown">
+  <!-- Bouton pour ouvrir le dropdown -->
+  <button 
+    (click)="toggleDropdown()"
+    class="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    aria-label="Changer le thème"
+  >
+    <!-- Icône soleil (thème actuel) -->
+    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+      </path>
+    </svg>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div 
+    *ngIf="isDropdownOpen"
+    class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+  >
+    <!-- En-tête du dropdown -->
+    <div class="px-4 py-2 text-sm font-medium text-gray-500 border-b border-gray-100">
+      Période
+    </div>
+
+    <!-- Option Clair -->
+    <button
+      (click)="selectTheme('Clair')"
+      class="w-full flex items-center px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150"
+      [class.bg-blue-50]="selectedTheme === 'Clair'"
+    >
+      <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+        </path>
       </svg>
+      <span class="text-gray-800">Clair</span>
     </button>
+
+    <!-- Option Sombre -->
+    <button
+      (click)="selectTheme('Sombre')"
+      class="w-full flex items-center px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150"
+      [class.bg-blue-50]="selectedTheme === 'Sombre'"
+    >
+      <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+        </path>
+      </svg>
+      <span class="text-gray-800">Sombre</span>
+    </button>
+
+    <!-- Option Système -->
+    <button
+      (click)="selectTheme('Système')"
+      class="w-full flex items-center px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150"
+      [class.bg-blue-50]="selectedTheme === 'Système'"
+    >
+      <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+        </path>
+      </svg>
+      <span class="text-gray-800">Système</span>
+    </button>
+  </div>
+</div>
     
     <!-- User profile -->
     <div class="flex items-center space-x-3">
@@ -39,13 +101,20 @@
         >
         <!-- User menu dropdown (optional) -->
         <div *ngIf="isUserMenuOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres</a>
-          <div class="border-t border-gray-100"></div>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Déconnexion</a>
+       
+          
+          <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+            </svg>
+            Mon Compte
+          </a>
+          <a href="#" class=" flex items-center gap-2  px-4 py-2 text-sm text-[#FF0909] hover:bg-gray-100">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Déconnexion</a>
         </div>
       </div>
-      <div class="flex flex-col text-right">
+      <div class="flex flex-col text-right mr-">
         <span class="text-sm font-semibold text-gray-800">Cheikh Gueye</span>
         <span class="text-xs text-gray-500">Administrateur</span>
       </div>

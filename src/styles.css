@@ -2,3 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Import Leaflet CSS */
+@import 'leaflet/dist/leaflet.css';
