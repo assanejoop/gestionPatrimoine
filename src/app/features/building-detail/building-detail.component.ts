@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BuildingDocumentsComponent } from '../building-documents/building-documents.component';
 import { BuildingMaintenanceComponent } from '../building-maintenance/building-maintenance.component';
 import { BuildingInformationsComponent } from "../building-informations/building-informations.component";
+import { BuildingLocationComponent } from "../building-location/building-location.component";
 
 interface Tab {
   name: string;
@@ -12,13 +13,12 @@ interface Tab {
 }
 
 @Component({
-  selector: 'app-building-detail',
-  standalone: true,
-  imports: [CommonModule,
+    selector: 'app-building-detail',
+    imports: [CommonModule,
     BuildingDocumentsComponent,
-    BuildingMaintenanceComponent, BuildingInformationsComponent],
-  templateUrl: './building-detail.component.html',
-  styleUrls: ['./building-detail.component.css']
+    BuildingMaintenanceComponent, BuildingInformationsComponent, BuildingLocationComponent],
+    templateUrl: './building-detail.component.html',
+    styleUrls: ['./building-detail.component.css']
 })
 export class BuildingDetailComponent implements OnInit {
   activeTab: string = 'Informations Generales';
@@ -47,6 +47,37 @@ export class BuildingDetailComponent implements OnInit {
     dimensions: '85 × 60 m²',
     occupancyStatus: 'Occupé'
   };
+
+  residence = {
+    name: 'Résidence Administrative Cheikh Anta Diop',
+    address: 'Avenue Georges Pompidou, Dakar Plateau, Sénégal',
+    type: 'Résidence',
+    status: 'Occupé',
+    image: 'assets/images/residence-building.jpg'
+  };
+
+  // 
+  //   { id: 'general', label: 'Informations générales', active: true },
+  //   { id: 'maintenance', label: 'Travaux & Maintenance', active: false },
+  //   { id: 'documents', label: 'Documents', active: false },
+  //   { id: 'locations', label: 'Locations', active: false },
+  //   { id: 'ownership', label: 'Copropriété', active: false }
+  // ];
+
+  onTabClick(selectedTab: any) {
+    this.tabs.forEach(tab => tab.active = false);
+    selectedTab.active = true;
+  }
+
+  onModifyBuilding() {
+    console.log('Modifier le bâtiment clicked');
+    // Logique pour modifier le bâtiment
+  }
+
+  onChangeOccupationStatus() {
+    console.log('Changer le statut d\'occupation clicked');
+    // Logique pour changer le statut d'occupation
+  }
 
   constructor() { }
 

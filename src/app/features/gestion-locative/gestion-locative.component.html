@@ -4,67 +4,130 @@
   <!-- Page Header -->
   <div class="flex justify-between items-start p-8 pb-4">
     <div>
-      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Gestion Locative</h1>
+      <h1 class="text-3xl font-semibold text-dark mb-2">Gestion  Locative</h1>
       <p class="text-gray-500 text-sm">Suivi des biens loués, des paiements et échéances</p>
     </div>
     
-    <div class="flex gap-4 items-center">
-      <select class="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm cursor-pointer" 
-              [value]="selectedPeriod()" 
-              (change)="onPeriodChange($any($event.target).value)">
-        <option value="Mensuel">Période</option>
-        <option value="Trimestriel">Trimestriel</option>
-        <option value="Annuel">Annuel</option>
-      </select>
+    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+      <!-- Period Selector -->
+      <div class="relative">
+        <select 
+          class="appearance-none bg-white  rounded-lg px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2  font-inter" >
+          <option class="text-dark text-sm font-inter" value="periode"> <i class="fa-regular fa-calendar"></i> Période</option>
+          <option>Cette semaine</option>
+          <option>Ce mois</option>
+          <option selected>Cette année</option>
+          <option>Toutes les périodes</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+          </svg>
+        </div>
+      </div>
       
-      <select class="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm cursor-pointer"
-              [value]="selectedRegion()" 
-              (change)="onRegionChange($any($event.target).value)">
-        <option value="Toutes les régions">Région</option>
-        <option value="Dakar">Dakar</option>
-        <option value="Saint-Louis">Saint-Louis</option>
-        <option value="Thiès">Thiès</option>
-      </select>
+
       
-      <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-              (click)="exportData()">
-        <span>📥</span>
-        Exporter
-      </button>
+      <!-- Region Selector -->
+      <div class="relative">
+        <select 
+          class="appearance-none bg-white rounded-[10px] px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option>Région</option>
+          <option selected>Toutes les régions</option>
+          <option>Dakar</option>
+          <option>Thiès</option>
+          <option>Saint-Louis</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="relative inline-block text-left">
+        <!-- Bouton principal -->
+        <button 
+        (click)="toggleDropdown()"
+          class="bg-[#3072BC] hover:bg-[#3072BC] text-white px-6 py-2 rounded-[5px] flex items-center gap-2 transition-colors duration-200 p-[10px]">
+          <!-- <i class="fa-solid fa-up-right-from-square"></i> -->
+           <img src="assets/images/icones/export.png" alt="" srcset="">
+          Exporter
+        </button>
+  
+        <!-- Menu dropdown -->
+        <div
+          *ngIf="isOpen"
+          class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          [@slideInOut]
+        >
+          <div class="py-1">
+            <!-- En-tête du dropdown -->
+            <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+              Exporter sous
+            </div>
+            
+            <!-- Option PDF -->
+            <button
+              (click)="exportToPDF()"
+              class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+            >
+              <!-- Icône PDF -->
+              <div class="flex-shrink-0 w-8 h-8 mr-3  rounded flex items-center justify-center">
+                <img src="assets/images/icones/pdf.png" alt="" srcset="">
+              </div>
+              <span class="font-medium">PDF</span>
+            </button>
+  
+            <!-- Option Excel -->
+            <button
+              (click)="exportToExcel()"
+              class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+            >
+              <!-- Icône Excel -->
+              <div class="flex-shrink-0 w-8 h-8 mr-3 rounded flex items-center justify-center">
+                <img src="assets/images/icones/excel.png" alt="" srcset="">
+              </div>
+              <span class="font-medium">EXCEL</span>
+            </button>
+          </div>
+        </div>
+      </div>
+     
     </div>
   </div>
 
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-8 mb-8">
-    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+    <div class="bg-white  flex justify-between items-center  rounded-[12px] gap-3 p-6">
       <div class="flex-1">
-        <div class="text-2xl font-bold text-gray-900 mb-1">{{ formatNumber(stats().totalProperties) }}</div>
+        <div class="text-2xl font-bold text-dark mb-1">{{ formatNumber(stats().totalProperties) }}</div>
         <div class="text-gray-500 text-sm mb-2">Biens loués</div>
         <div class="flex items-center gap-1 text-xs text-green-600">
           <span>📈</span>
           +5 nouveaux cette année
         </div>
       </div>
-      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
-        🏢
-      </div>
+      <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+        <img src="assets/images/icones/users1.png" alt="" srcset="">
+         </div>
     </div>
 
-    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+    <div class="bg-white rounded-lg p-6  flex justify-between items-center ">
       <div class="flex-1">
-        <div class="text-2xl font-bold text-gray-900 mb-1">{{ stats().monthlyRent }}M€</div>
+        <div class="text-2xl font-bold text-dark mb-1">{{ stats().monthlyRent }}M€</div>
         <div class="text-gray-500 text-sm mb-2">Loyers mensuels</div>
         <div class="flex items-center gap-1 text-xs text-yellow-600">
           <span>⚠️</span>
           02 En litige
         </div>
       </div>
-      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
-        💰
-      </div>
+      <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+        <img src="assets/images/icones/check.png" alt="" srcset="">
+         </div>
     </div>
 
-    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+    <div class="bg-white rounded-lg p-6  flex justify-between items-center ">
       <div class="flex-1">
         <div class="text-2xl font-bold text-gray-900 mb-1">{{ stats().activeContracts }}</div>
         <div class="text-gray-500 text-sm mb-2">Contrats actifs</div>
@@ -72,12 +135,12 @@
           82%
         </div>
       </div>
-      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
-        📋
-      </div>
+      <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+        <img src="assets/images/icones/check.png" alt="" srcset="">
+         </div>
     </div>
 
-    <div class="bg-white rounded-lg p-6 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow">
+    <div class="bg-white rounded-lg p-6 flex justify-between items-center  ">
       <div class="flex-1">
         <div class="text-2xl font-bold text-gray-900 mb-1">{{ stats().paymentRate }}%</div>
         <div class="text-gray-500 text-sm mb-2">Taux de paiement</div>
@@ -85,9 +148,9 @@
           20 000 000 Fcfa
         </div>
       </div>
-      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl">
-        💳
-      </div>
+      <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+        <img src="assets/images/icones/check.png" alt="" srcset="">
+         </div>
     </div>
   </div>
 
@@ -96,7 +159,7 @@
     <!-- Première ligne - 2 graphiques -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Payment Rate Pie Chart -->
-      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="bg-white rounded-lg p-6 ">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Taux de paiement à échéance</h3>
         <div class="flex items-center gap-8">
           <div class="relative w-32 h-32">
@@ -119,7 +182,7 @@
       </div>
 
       <!-- Monthly Rent Chart -->
-      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="bg-white rounded-lg p-6 ">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-semibold text-gray-900">Montant des loyers mensuels</h3>
           <select class="px-2 py-1 border border-gray-300 rounded text-xs">
@@ -139,7 +202,7 @@
     <!-- Deuxième ligne - 2 graphiques -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Expiring Contracts Chart -->
-      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="bg-white rounded-lg p-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-semibold text-gray-900">Contrats expirant dans 3 mois</h3>
           <select class="px-2 py-1 border border-gray-300 rounded text-xs">
@@ -152,7 +215,7 @@
       </div>
 
       <!-- Payment Delays Chart -->
-      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="bg-white rounded-lg p-6 ">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Retards de paiement</h3>
         <div class="flex items-center gap-4 mb-4">
           <div class="flex items-center gap-2">
@@ -173,7 +236,7 @@
     <!-- Troisième ligne - 2 graphiques -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Ministry Distribution Chart -->
-      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="bg-white rounded-lg p-6 ">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Répartition loyers par ministère</h3>
         <div class="flex items-center gap-8">
           <div class="relative w-32 h-32">
@@ -189,7 +252,7 @@
       </div>
 
       <!-- Regional Costs Chart -->
-      <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="bg-white rounded-lg p-6 ">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-semibold text-gray-900">Coût moyen mensuel par région</h3>
           <select class="px-2 py-1 border border-gray-300 rounded text-xs">

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 
@@ -5,13 +6,13 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-rapport',
-  standalone: true,
-  imports: [],
-  templateUrl: './rapport.component.html',
-  styleUrl: './rapport.component.css'
+    selector: 'app-rapport',
+    imports: [CommonModule],
+    templateUrl: './rapport.component.html',
+    styleUrl: './rapport.component.css'
 })
 export class RapportComponent implements OnInit {
+  isOpen=false;
 
   constructor() { }
 
@@ -22,6 +23,26 @@ export class RapportComponent implements OnInit {
       this.createExportTypesChart();
       this.createExportFrequencyChart();
     }, 100);
+  }
+  // Methode poour ovrir les dropdows 
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
   }
 
   createReportTypesChart(): void {

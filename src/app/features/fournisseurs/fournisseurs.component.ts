@@ -1,5 +1,5 @@
 // fournisseurs.component.ts
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, effect, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -46,16 +46,32 @@ interface FournisseurFilters {
   periode: string;
   region: string;
 }
+interface DocumentStats {
+  associatedDocuments: number;
+  archivedDocuments: number;
+  expiredDocuments: number;
+}
+
 
 @Component({
-  selector: 'app-fournisseurs',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './fournisseurs.component.html',
-  styleUrls: ['./fournisseurs.component.css']
+    selector: 'app-fournisseurs',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './fournisseurs.component.html',
+    styleUrls: ['./fournisseurs.component.css']
 })
 export class FournisseursComponent implements OnInit {
 
+  documentStats: DocumentStats = {
+    associatedDocuments: 1248,
+    archivedDocuments: 127,
+    expiredDocuments: 12
+  };
+  isDropdownOpen = false;
+  selectedTheme = 'Pdf';
+  elementRef: any;
+
+  isOpen = false;
+  selectedRegion = '';
   // Signaux pour les données principales
   fournisseurStats = signal<FournisseurStats>({
     fournisseursActifs: 42,
@@ -93,6 +109,45 @@ export class FournisseursComponent implements OnInit {
     { fournisseur: 'Fournisseur Z', montant: 20000 }
   ]);
 
+
+
+  selectTheme(theme: string) {
+    this.selectedTheme = theme;
+    this.isDropdownOpen = false;
+    // Ici vous pouvez ajouter la logique pour appliquer le thème
+    console.log('Thème sélectionné:', theme);
+  }
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
+  }
+
+  // Fermer le dropdown si on clique à l'extérieur
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeDropdown();
+    }
+  }
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    this.closeDropdown();
+  }
   // Historique des interventions
   interventionsHistorique = signal<InterventionHistorique[]>([
     {
@@ -353,5 +408,8 @@ export class FournisseursComponent implements OnInit {
       ...current,
       [filterType]: target.value
     }));
+  }
+  formatNumber(num: number): string {
+    return num.toLocaleString('fr-FR');
   }
 }

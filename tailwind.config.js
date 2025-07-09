@@ -9,6 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        primary:'#000000',
         secondary: '#53170C',
         thrid:'#777777',
         fourth:'#F5F7FA',
@@ -21,6 +22,7 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
+      poppins: ['Poppins', 'sans-serif'],
     },
   },
   plugins: [],

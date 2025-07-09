@@ -1,0 +1,35 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": { "name": "Dakar" },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [-17.525, 14.765],
+            [-17.425, 14.765],
+            [-17.425, 14.695],
+            [-17.525, 14.695],
+            [-17.525, 14.765]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": { "name": "Thiès" },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [-16.975, 14.965],
+            [-16.875, 14.965],
+            [-16.875, 14.865],
+            [-16.975, 14.865],
+            [-16.975, 14.965]
+          ]]
+        }
+      }
+      
+    ]
+  }
+  

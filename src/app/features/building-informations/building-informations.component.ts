@@ -6,11 +6,10 @@ interface Tab {
 }
 
 @Component({
-  selector: 'app-building-informations',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './building-informations.component.html',
-  styleUrl: './building-informations.component.css'
+    selector: 'app-building-informations',
+    imports: [CommonModule],
+    templateUrl: './building-informations.component.html',
+    styleUrl: './building-informations.component.css'
 })
 export class BuildingInformationsComponent {
 

@@ -40,11 +40,10 @@ interface RegionalCost {
 }
 
 @Component({
-  selector: 'app-gestion-locative',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './gestion-locative.component.html',
-  styleUrls: ['./gestion-locative.component.css']
+    selector: 'app-gestion-locative',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './gestion-locative.component.html',
+    styleUrls: ['./gestion-locative.component.css']
 })
 export class GestionLocativeComponent implements OnInit, AfterViewInit {
   
@@ -56,6 +55,7 @@ export class GestionLocativeComponent implements OnInit, AfterViewInit {
   @ViewChild('regionalCostChart', { static: false }) regionalCostChart!: ElementRef;
 
   private charts: Chart[] = [];
+  isOpen=false;
 
   // Statistiques principales
   stats = signal<RentalStats>({
@@ -130,6 +130,26 @@ export class GestionLocativeComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy(): void {
     this.charts.forEach(chart => chart.destroy());
+  }
+// methode pour les dropdows dans l entete 
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
   }
 
   // Création du graphique en donut pour le taux de paiement

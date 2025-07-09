@@ -4,66 +4,142 @@
 
 
   <!-- Title Section -->
-  <div class="title-section">
-    <h1>Gestion des Fournisseurs</h1>
+  <div class="title-section flex justify-between">
+    <div class="flex flex-col">
+    <h1 class="text-dark">Gestion des Fournisseurs</h1>
     <p class="subtitle">Suivre les prestataires et les engagements financiers</p>
-    
-    <div class="controls">
-      <div class="filters">
-        <select class="filter-select" (change)="onFilterChange('periode', $event)">
-          <option value="Période">📅 Période</option>
-          <option value="Aujourd'hui">Aujourd'hui</option>
-          <option value="Cette semaine">Cette semaine</option>
-          <option value="Ce mois">Ce mois</option>
+  </div>
+    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+      <!-- Period Selector -->
+      <div class="relative">
+        <select 
+          class="appearance-none bg-white  rounded-lg px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2  font-inter" >
+          <option class="text-dark text-sm font-inter" value="periode"> <i class="fa-regular fa-calendar"></i> Période</option>
+          <option>Cette semaine</option>
+          <option>Ce mois</option>
+          <option selected>Cette année</option>
+          <option>Toutes les périodes</option>
         </select>
-        
-        <select class="filter-select" (change)="onFilterChange('region', $event)">
-          <option value="Région">📍 Région</option>
-          <option value="Dakar">Dakar</option>
-          <option value="Thiès">Thiès</option>
-          <option value="Saint-Louis">Saint-Louis</option>
-        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+          </svg>
+        </div>
       </div>
       
-      <button class="export-btn" (click)="onExport()">
-        📤 Exporter
-      </button>
+
+      
+      <!-- Region Selector -->
+      <div class="relative">
+        <select 
+          class="appearance-none bg-white rounded-[10px] px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option>Région</option>
+          <option selected>Toutes les régions</option>
+          <option>Dakar</option>
+          <option>Thiès</option>
+          <option>Saint-Louis</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="relative inline-block text-left">
+        <!-- Bouton principal -->
+        <button 
+        (click)="toggleDropdown()"
+          class="bg-[#3072BC] hover:bg-[#3072BC] text-white px-6 py-2 rounded-[5px] flex items-center gap-2 transition-colors duration-200 p-[10px]">
+          <!-- <i class="fa-solid fa-up-right-from-square"></i> -->
+           <img src="assets/images/icones/export.png" alt="" srcset="">
+          Exporter
+        </button>
+  
+        <!-- Menu dropdown -->
+        <div
+          *ngIf="isOpen"
+          class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          [@slideInOut]
+        >
+          <div class="py-1">
+            <!-- En-tête du dropdown -->
+            <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+              Exporter sous
+            </div>
+            
+            <!-- Option PDF -->
+            <button
+              (click)="exportToPDF()"
+              class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+            >
+              <!-- Icône PDF -->
+              <div class="flex-shrink-0 w-8 h-8 mr-3  rounded flex items-center justify-center">
+                <img src="assets/images/icones/pdf.png" alt="" srcset="">
+              </div>
+              <span class="font-medium">PDF</span>
+            </button>
+  
+            <!-- Option Excel -->
+            <button
+              (click)="exportToExcel()"
+              class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+            >
+              <!-- Icône Excel -->
+              <div class="flex-shrink-0 w-8 h-8 mr-3 rounded flex items-center justify-center">
+                <img src="assets/images/icones/excel.png" alt="" srcset="">
+              </div>
+              <span class="font-medium">EXCEL</span>
+            </button>
+          </div>
+        </div>
+      </div>
+     
     </div>
   </div>
+
 
   <!-- Stats Cards -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon blue">
-        👥
-      </div>
-      <div class="stat-content">
-        <div class="stat-number">{{ fournisseurStats().fournisseursActifs }}</div>
-        <div class="stat-label">Fournisseurs actifs</div>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon blue">
-        📋
-      </div>
-      <div class="stat-content">
-        <div class="stat-number">{{ fournisseurStats().contratsEnCours }}</div>
-        <div class="stat-label">Contrats en cours</div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Documents associés -->
+    <div class="bg-white rounded-lg  p-6 ">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.associatedDocuments) }}</div>
+          <div class="text-gray-600 mt-1">Fournisseur actifs</div>
+        </div>
+        <div class="w-12 h-12 bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+          <img src="assets/images/icones/users1.png" alt="" srcset="">
+        </div>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-icon orange">
-        ⭐
+    <!-- Documents archivés -->
+    <div class="bg-white rounded-lg p-6 ">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.archivedDocuments) }}</div>
+          <div class="text-gray-600 mt-1">Contrats en cours</div>
+        </div>
+        <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+       <img src="assets/images/icones/check.png" alt="" srcset="">
+        </div>
       </div>
-      <div class="stat-content">
-        <div class="stat-number">{{ fournisseurStats().tauxSatisfaction }}/5</div>
-        <div class="stat-label">Taux de satisfaction</div>
+    </div>
+
+    <!-- Documents expirés -->
+    <div class="bg-white rounded-lg p-6 ">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.expiredDocuments) }}</div>
+          <div class="text-gray-600 mt-1">Taux de statisfaction</div>
+        </div>
+        <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+          <img src="assets/images/icones/check.png" alt="" srcset="">
+        </div>
       </div>
     </div>
   </div>
-
   <!-- Charts Section -->
   <div class="charts-grid">
     <!-- Répartition par spécialité -->

@@ -36,10 +36,9 @@ interface Folder {
 }
 
 @Component({
-  selector: 'app-building-documents',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './building-documents.component.html'
+    selector: 'app-building-documents',
+    imports: [CommonModule, FormsModule],
+    templateUrl: './building-documents.component.html'
 })
 export class BuildingDocumentsComponent implements OnInit {
   tabs: Tab[] = [

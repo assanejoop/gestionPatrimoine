@@ -1,0 +1,70 @@
+.bg-orange-500 {
+    background-color: #f26c36;
+  }
+
+  /* .budget-indicator {
+
+
+  } */
+
+  .budgetData{
+    width: 126px;
+    height: 56px;
+    top: 18px;
+    left: 130.14px;
+    border-radius: 13px;
+    background: #1E1B39;    
+  }
+ 
+
+  .detailData{
+    width: 53.98px;
+    height: 22.53px;
+    top: 73.79px;
+    left: 110px;
+    transform: rotate(90deg);
+    border-radius: 2px;
+    position: absolute; /* Nécessaire pour top/left */
+
+  }
+  .budget-indicator{
+    /* display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: end; */
+    width: 161px;
+    height: 40px;
+    
+    /* top: 170px; */
+    /* left: 178.33px; */
+    gap: 12px;
+    /* margin-top: -30px; */
+    margin-right: 40px;
+    
+    
+
+  }
+  .myspan{
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0px;
+    text-align: center;
+    color: gray;
+     
+    
+
+
+  }
+  .budget-content {
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 13.4px;
+    letter-spacing: 0%;
+    
+  
+  }
+
+ 

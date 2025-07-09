@@ -1,0 +1,37 @@
+button {
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .monNav {
+    width: 1116px;
+    height: 56px;
+    top: 189px;
+    left: 300px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-style:  solid;
+    border-color: #CBD5E1;
+  }
+  .monNav li  {
+    list-style-type: none;
+    padding-left: 0; /* optionnel : enlève l'indentation */
+  }
+.monNav a li {
+    color: #4B5563;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    padding: 16px 24px;
+    text-decoration: none;
+}
+.mon-texte {
+  /* font-family: 'Inter', sans-serif; */
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.5; /* équivalent à 150% */
+  letter-spacing: 0; /* 0% = aucune espacement ajouté */
+  
+}
+

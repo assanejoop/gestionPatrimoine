@@ -1,28 +1,12 @@
 <div class="flex flex-col h-full bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 border-r border-gray-200 dark:border-gray-700 w-64 shadow-sm">
-  <!-- Profile Section -->
-  <!-- <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 m-3 flex items-center justify-between">
-    <div class="flex items-center">
-      <div class="relative">
-        <img src="assets/images/persona.png" class="w-12 h-12 rounded-full object-cover border-2 border-blue-600" alt="Profile" />
-      </div>
-      <div class="ml-3">
-        <div class="font-bold text-2xs">Cheikh Gueye</div>
-        <div class="text-gray-500 dark:text-gray-400 text-sm">Administrateur</div>
-      </div>
-    </div>
-    <button class="text-gray-500 dark:text-gray-400">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-  </div> -->
-  <!-- Logo Section -->
-  <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 m-3 flex items-center justify-center">
+  <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 m-3 flex items-center justify-center border  w-[244px] h-[65.26831817626953px] pb-[10px] gap-[12px] border-b ">
     <div class="flex items-center space-x-3">
       <img src="../assets/images/agp.png" class="h-14 object-contain" alt="Logo AGPBE" />
-      <h1 class=" font-semibold text-sm leading-tight" style="color: #6e4134;">
-        Agence de Gestion du Patrimoine Bâti de l'Etat
-      </h1>
+      <div >
+      <h2 class="text-sm font-semibold text-secondary leading-5 font-inter">Agence de Gestion du</h2>
+        <p class="text-sm  font-semibold text-secondary  font-inter leading-5">Patrimoine Bâti de l'État</p>
+      
+    </div>
     </div>
   </div>
 
@@ -33,19 +17,20 @@
       <li *ngFor="let item of menuItems(); let i = index" class="mb-2">
         <a 
           [routerLink]="item.subItems ? null : item.route" 
-          [routerLinkActive]="item.subItems ? '' : 'bg-blue-50 dark:bg-gray-800 text-blue-600 dark:text-blue-400'" 
+          [routerLinkActive]="item.subItems ? '' : 'bg-blue-50 dark:bg-gray-800 text-blue-600  text-sm dark:text-blue-400 '" 
           [routerLinkActiveOptions]="{exact: !item.subItems}"
-          class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors " 
           [class.cursor-pointer]="item.subItems"
           (click)="item.subItems && $event.preventDefault(); item.subItems && toggleSubmenu(i)"
         >
           <div class="flex items-center">
             <!-- Use correct icon based on name  -->
             <ng-container [ngSwitch]="item.icon">
-              <img *ngSwitchCase="'dashboard'" src="assets/images/icones/Settings.svg" alt="" class="h-6 w-6">
+              
+              <img *ngSwitchCase="'dashboard'" src="assets/images/icones/Settings.svg"  alt="" class="h-6 w-6">
               <img *ngSwitchCase="'localisation'" src="assets/images/icones/location.svg" alt="" class="h-6 w-6">
               <img *ngSwitchCase="'documents'" src="assets/images/icones/other.png" alt="" class="h-6 w-6">
-              <img *ngSwitchCase="'buildings'" src="assets/images/icones/hand.svg" alt="" class="h-6 w-6">
+              <img *ngSwitchCase="'buildings'" src="assets/images/icones/real-estate.png" alt="" class="h-6 w-6">
               <svg *ngSwitchCase="'utilisateurs'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -58,7 +43,7 @@
               </svg>
               <img *ngSwitchCase="'help'" src="assets/images/icones/faq.svg" alt="" class="h-6 w-6">
             </ng-container>
-            <span class="ml-3">{{ item.name }}</span>
+            <span class="ml-3 font-medium text-sm leading-[14px] tracking-normal font-inter text-dark">{{ item.name }}</span>
           </div>
           <svg *ngIf="item.subItems" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-200" 
                [class.transform]="item.expanded" [class.rotate-180]="item.expanded"
@@ -68,24 +53,40 @@
         </a>
 
         <!-- Submenu -->
-        <ul *ngIf="item.subItems && item.expanded" class="ml-6 mt-2 space-y-2 transition-all duration-300 ease-in-out">
+        <ul *ngIf="item.subItems && item.expanded" class="ml-4 mt-2 space-y-2 transition-all duration-300 ease-in-out text-sm ">
           <li *ngFor="let subItem of item.subItems">
             <a 
               [routerLink]="subItem.route"
-              routerLinkActive="bg-white dark:bg-white text-[#0A1B7B] dark:text-[#0A1B7B] font-medium shadow-sm"
+              routerLinkActive="bg-[#3072BC1A] text-[#0A1B7B] text-sm font-medium border-l-[3px] border-l-[#3072BC] dark:border-l-[#3072BC] "
               [routerLinkActiveOptions]="{exact: true}"
-              class="flex items-center p-3 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-gray-50 hover:text-gray-700 dark:hover:text-gray-700"
+              class="flex items-center p-3 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-gray-50 hover:text-gray-700 dark:hover:text-gray-700 "
               [class.text-gray-600]="!isActiveRoute(subItem.route)"
               [class.dark:text-gray-500]="!isActiveRoute(subItem.route)"
             >
-              <div class="w-2 h-2 rounded-full mr-3" 
-                   [class.bg-[#0A1B7B]]="isActiveRoute(subItem.route)" 
-                   [class.bg-gray-400]="!isActiveRoute(subItem.route)"
-                   [class.dark:bg-gray-500]="!isActiveRoute(subItem.route)"></div>
+              <!-- Icône image -->
+              <!-- <img [src]="'assets/images/icones' + subItem.icon + '.png'" class="w-5 h-5 mr-3" alt="icon" /> -->
+              <ng-container [ngSwitch]="subItem.icon">
+                <img *ngSwitchCase="'chart-bar'" src="assets/images/icones/chart-bar.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'map'" src="assets/images/icones/map.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'archive'" src="assets/images/icones/archive.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'tools'" src="assets/images/icones/tools.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'home'" src="assets/images/icones/home.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'truck'" src="assets/images/icones/truck.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'document-report'" src="assets/images/icones/document-report.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'calculator'" src="assets/images/icones/calculator.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'building-office'" src="assets/images/icones/building-office.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'user-friend'" src="assets/images/icones/user-friend.png" class="w-5 h-5 mr-3" alt="icon" />
+                <img *ngSwitchCase="'map-pin'" src="assets/images/icones/map-pin.png" class="w-5 h-5 mr-3" alt="icon" />
+
+              </ng-container>
+              
+        
               {{ subItem.name }}
             </a>
           </li>
         </ul>
+        
+        
       </li>
     </ul>
   
@@ -101,36 +102,7 @@
   </nav>
 
   <!-- Theme Toggle -->
-  <div class="p-4 mt-auto border-gray-200 dark:border-gray-700">
-    <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-      <button 
-        (click)="setTheme('light')" 
-        [class.bg-white]="currentTheme() === 'light'"
-        [class.shadow-sm]="currentTheme() === 'light'"
-        class="flex items-center justify-center p-2 flex-1 rounded-lg transition-all duration-200"
-        [class.text-gray-900]="currentTheme() === 'light'"
-        [class.text-gray-500]="currentTheme() !== 'light'"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <span class="ml-2">Clair</span>
-      </button>
-      <button 
-        (click)="setTheme('dark')" 
-        [class.bg-gray-700]="currentTheme() === 'dark'"
-        [class.shadow-sm]="currentTheme() === 'dark'"
-        class="flex items-center justify-center p-2 flex-1 rounded-lg transition-all duration-200"
-        [class.text-white]="currentTheme() === 'dark'"
-        [class.text-gray-400]="currentTheme() !== 'dark'"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-        <span class="ml-2">Sombre</span>
-      </button>
-    </div>
-  </div>
+  
 </div>
 
 <!-- le tsda -->

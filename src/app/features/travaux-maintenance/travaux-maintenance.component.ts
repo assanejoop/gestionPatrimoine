@@ -63,10 +63,9 @@ interface WorkTypeCost {
 }
 
 @Component({
-  selector: 'app-travaux-maintenance',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './travaux-maintenance.component.html'
+    selector: 'app-travaux-maintenance',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './travaux-maintenance.component.html'
 })
 export class TravauxMaintenanceComponent implements OnInit, AfterViewInit {
   
@@ -77,6 +76,23 @@ export class TravauxMaintenanceComponent implements OnInit, AfterViewInit {
   @ViewChild('incidentsChart') incidentsChart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('supplierChart') supplierChart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('costChart') costChart!: ElementRef<HTMLCanvasElement>;
+
+
+  // Propriétés du graphique
+  completionRate: number = 40;
+   isOpen =false;
+  // Propriétés pour le SVG
+  centerX: number = 150;
+  centerY: number = 150;
+  radius: number = 80;
+  
+  // Propriétés calculées
+  circumference: number = 0;
+  dashOffset: number = 0;
+  backgroundPath: string = '';
+  progressPath: string = '';
+  indicatorX: number = 0;
+  indicatorY: number = 0;
 
   private charts: Chart.Chart[] = [];
 
@@ -140,6 +156,8 @@ export class TravauxMaintenanceComponent implements OnInit, AfterViewInit {
   ]);
 
   ngOnInit(): void {
+    this.calculatePaths();
+    this.animateProgress();
     // Initialisation des données si nécessaire
   }
 
@@ -163,6 +181,27 @@ export class TravauxMaintenanceComponent implements OnInit, AfterViewInit {
     this.createIncidentsChart();
     this.createSupplierChart();
     this.createCostChart();
+  }
+
+  // Methode pour les dropdowns 
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
   }
 
   private createMonthlyWorksChart(): void {
@@ -381,6 +420,64 @@ export class TravauxMaintenanceComponent implements OnInit, AfterViewInit {
     this.charts.push(chart);
   }
 
+
+  private calculatePaths(): void {
+    // Calcul du chemin de fond (demi-cercle complet)
+    this.backgroundPath = this.createSemicirclePath(this.centerX, this.centerY, this.radius);
+    this.progressPath = this.createSemicirclePath(this.centerX, this.centerY, this.radius);
+    
+    // Calcul de la circonférence pour le demi-cercle
+    this.circumference = Math.PI * this.radius;
+  }
+
+  /**
+   * Crée le chemin SVG pour un demi-cercle
+   */
+  private createSemicirclePath(centerX: number, centerY: number, radius: number): string {
+    const startX = centerX - radius;
+    const startY = centerY;
+    const endX = centerX + radius;
+    const endY = centerY;
+    
+    return `M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`;
+  }
+
+  /**
+   * Anime la progression du graphique
+   */
+  private animateProgress(): void {
+    // Animation avec un délai pour l'effet visuel
+    setTimeout(() => {
+      // Calcul du décalage pour afficher le pourcentage correct
+      const progressPercentage = this.completionRate / 100;
+      this.dashOffset = this.circumference * (1 - progressPercentage);
+      
+      // Calcul de la position du point indicateur
+      this.calculateIndicatorPosition();
+    }, 100);
+  }
+
+  /**
+   * Calcule la position du point indicateur
+   */
+  private calculateIndicatorPosition(): void {
+    // Angle pour le pourcentage donné (0 à 180 degrés pour un demi-cercle)
+    const angle = (this.completionRate / 100) * Math.PI;
+    
+    // Position du point indicateur
+    this.indicatorX = this.centerX - this.radius * Math.cos(angle);
+    this.indicatorY = this.centerY - this.radius * Math.sin(angle);
+  }
+
+  /**
+   * Met à jour le taux de complétion (méthode publique pour les tests ou mises à jour)
+   */
+  public updateCompletionRate(newRate: number): void {
+    if (newRate >= 0 && newRate <= 100) {
+      this.completionRate = newRate;
+      this.animateProgress();
+    }
+  }
   private createSupplierChart(): void {
     const ctx = this.supplierChart.nativeElement.getContext('2d');
     if (!ctx) return;

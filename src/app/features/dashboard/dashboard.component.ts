@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, signal, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, signal, Inject, PLATFORM_ID, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { 
@@ -12,31 +12,34 @@ import {
   registerables
 } from 'chart.js';
 import { FormsModule } from '@angular/forms';
-import * as L from 'leaflet';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 
-// Enregistrer les composants nécessaires
-Chart.register(
-  ArcElement,
-  DoughnutController,
-  Legend,
-  Tooltip,
-  Title
-);
+import { GeoJsonObject, Feature } from 'geojson';
+
+
+let L: any;
+
+if (typeof window !== 'undefined') {
+  import('leaflet').then((leaflet) => {
+    L = leaflet;
+  });
+}
 
 // Enregistrer tous les composants Chart.js
 Chart.register(...registerables);
 
+
+
 interface StatCard {
+  value: string;
   title: string;
-  value: number;
-  subtitle: string;
-  trend: {
-    value: number;
-    label: string;
-    isPositive: boolean;
-  };
+  change: string;
+  changeText: string;
   icon: string;
+  iconPath: string;
+  iconColor: string;
+  changeType: 'positive' | 'negative' | 'warning';
 }
 
 interface ChartData {
@@ -59,32 +62,58 @@ interface RegionData {
   cities: string[];
 }
 
+
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+    selector: 'app-dashboard',
+    standalone: true,
+    imports: [CommonModule, RouterModule, FormsModule],
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   
   @ViewChild('barChart', { static: false }) barChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('completionChart', { static: false }) completionChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('revenueChart', { static: false }) revenueChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('geoChart', { static: false }) geoChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('pieChart', { static: false }) pieChart!: ElementRef<HTMLCanvasElement>;
-
   @ViewChild('donutChart', { static: false }) donutChart!: ElementRef<HTMLCanvasElement>;
 
-  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
-  @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef; // Ajout si vous avez un canvas
-
-  public  map!: L.Map;
   
-  private regionLayers!: L.LayerGroup;
+  private map!: L.Map;
+  private senegalLayer!: L.LayerGroup;
+  isPlatformBrowser = isPlatformBrowser;
+  private L: any;
+  // Exemple de densités fictives
+  regionDensities: Record<string, number> = {
+    'Dakar': 120,
+    'Thiès': 65,
+    'Kaolack': 35,
+    'Diourbel': 45,
+    'Saint-Louis': 15,
+    'Fatick': 30,
+    'Ziguinchor': 50,
+    'Kolda': 12,
+    'Matam': 8,
+    'Kaffrine': 10,
+    'Sédhiou': 20,
+    'Kédougou': 5,
+    'Tambacounda': 7,
+    'Louga': 18
+  };
+
+// variable pour le scroll horizontale des statCards
+
+  scrollOffset = 0;
+  maxScrollOffset = 0;
+  private regionLayers!: any;
+  isOpen = false;
   selectedRegion = '';
   showRegionInfo = false;
   regionInfo: any = {};
+  private isBrowser: boolean;
+
+  isDropdownOpen = false;
+  selectedTheme = 'Pdf';
 
   private svg: any;
   private width = 900;
@@ -290,6 +319,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
+ 
+
   
   regions = [
     'Toutes les régions',
@@ -346,7 +377,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   // Propriétés pour le SVG
   centerX: number = 150;
   centerY: number = 150;
-  radius: number = 80;
+  radius: number = 100;
   
   // Propriétés calculées
   circumference: number = 0;
@@ -357,64 +388,69 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   indicatorY: number = 0;
 
 
-  // private svg: any;
-  // private width = 900;
-  // private height = 600;
-  // private tooltip: any;
-
+ 
   private barChart?: Chart;
   private completionChart?: Chart;
-  private revenueChart?: Chart;
+  // private revenueChart?: Chart;
   private geoChart?: Chart;
 
-  // Variable pour vérifier si on est côté client
-  private isBrowser: boolean;
+ 
+
 
   // Signaux pour les données du dashboard
-  statCards = signal<StatCard[]>([
+  currentIndex = 0;
+  allStats: StatCard[] = [
     {
-      title: 'Biens immobiliers',
-      value: 1500,
-      subtitle: 'Total des biens',
-      trend: { value: 5, label: 'nouveaux cette année', isPositive: true },
-      icon: '🏠'
+      value: "1500",
+      title: "Biens immobiliers",
+      change: "+5",
+      changeText: "nouveaux cette année",
+      icon: "house",
+      iconPath: "assets/images/icones/case.svg",
+      iconColor: "text-blue-500",
+      changeType: "positive"
     },
     {
-      title: 'En location',
-      value: 963,
-      subtitle: 'Propriétés louées',
-      trend: { value: 20, label: 'nouveaux ce mois-ci', isPositive: true },
-      icon: '🏘️'
+      value: "963",
+      title: "En location",
+      change: "+20",
+      changeText: "nouveaux ce mois-ci",
+      icon: "location",
+      iconPath: "assets/images/icones/case.svg",
+      iconColor: "text-blue-500",
+      changeType: "positive"
     },
     {
-      title: 'En copropriété',
-      value: 127,
-      subtitle: 'Unités en copropriété',
-      trend: { value: 2, label: 'En litige', isPositive: false },
-      icon: '🏢'
+      value: "127",
+      title: "En copropriété",
+      change: "02",
+      changeText: "En litige",
+      icon: "copropriete",
+      iconPath: "assets/images/icones/case.svg",
+      iconColor: "text-blue-500",
+      changeType: "warning"
     },
     {
-      title: 'Bâtiments occupés',
-      value: 1090,
-      subtitle: 'Unités occupées',
-      trend: { value: 20, label: 'cette année', isPositive: true },
-      icon: '👥'
+      value: "1090",
+      title: "Bâtiments occupés",
+      change: "+20",
+      changeText: "cette année",
+      icon: "building",
+      iconPath: "assets/images/icones/case.svg",
+      iconColor: "text-blue-500",
+      changeType: "positive"
     },
     {
-      title: 'Bâtiments vacants',
-      value: 410,
-      subtitle: 'Unités vacantes',
-      trend: { value: 40, label: 'cette année', isPositive: false },
-      icon: '🏗️'
-    },
-    {
-      title: 'Maintenance',
-      value: 85,
-      subtitle: 'Taux de maintenance',
-      trend: { value: 15, label: 'cette année', isPositive: true },
-      icon: '🔧'
+      value: "410",
+      title: "Bâtiments",
+      change: "-40",
+      changeText: "cette année",
+      icon: "user",
+      iconPath: "assets/images/icones/case.png",
+      iconColor: "text-blue-500",
+      changeType: "negative"
     }
-  ]);
+  ];
 
 
   
@@ -436,12 +472,22 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     withGPS: 75,
     withoutGPS: 25
   });
+  elementRef: any;
+
+
+
 
   // selectedPeriod = signal<string>('Cette année');
   // selectedRegion = signal<string>('Toutes les régions');
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+    ) 
+  {
+    
     this.isBrowser = isPlatformBrowser(this.platformId);
+    
+    
     
     // N'enregistrer Chart.js que côté client
     if (this.isBrowser && typeof Chart !== 'undefined') {
@@ -453,38 +499,22 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.calculatePaths();
     this.animateProgress();
     this.createChart();
-    // Configuration de Leaflet pour les icônes
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-    });
-    
-    // Initialisation des données (peut s'exécuter côté serveur)
-    
+      
   }
 
 
-  
-
-  ngAfterViewInit(): void {
+   ngAfterViewInit(): void {
     // Ne créer les graphiques que côté client
-    if (this.isBrowser) {
-      // Utiliser setTimeout pour s'assurer que les ViewChild sont initialisés
+    this.initMap();
+
+    if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
         this.initializeCharts();
-      }, 100);
+      }, 0);
     }
-    this.drawPieChart();
-
-    setTimeout(() => {
-      this.createChart();
-    }, 100);
-
-    this.initMap();
-    this.addRegions();
-    this.addLegend();
+    this.maxScrollOffset = -50;
+    
+  
   }
 
   ngOnDestroy(): void {
@@ -500,14 +530,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private initializeCharts(): void {
     if (!this.isBrowser) return;
 
-    try {
-      this.createBarChart();
-      // this.createCompletionChart();
-      // this.createRevenueChart();
-      // this.createGeoChart();
-    } catch (error) {
-      console.error('Erreur lors de l\'initialisation des graphiques:', error);
-    }
+    this.createBarChart();
+    this.drawPieChart();
+    //  this.createRevenueChart();
+    this.createChart();
   }
 
   private destroyCharts(): void {
@@ -522,10 +548,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.completionChart.destroy();
         this.completionChart = undefined;
       }
-      if (this.revenueChart) {
-        this.revenueChart.destroy();
-        this.revenueChart = undefined;
-      }
+    
       if (this.geoChart) {
         this.geoChart.destroy();
         this.geoChart = undefined;
@@ -534,6 +557,67 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('Erreur lors de la destruction des graphiques:', error);
     }
   }
+
+  // methode pour les statCards
+  onScroll(event: WheelEvent): void {
+    event.preventDefault();
+    
+    const scrollSensitivity = 2;
+    const deltaX = event.deltaX || event.deltaY;
+    
+    // Calculer le nouveau offset
+    let newOffset = this.scrollOffset - (deltaX * scrollSensitivity);
+    
+    // Limiter le défilement
+    if (newOffset > 0) {
+      newOffset = 0; // Pas de défilement vers la gauche au-delà de la position initiale
+    } else if (newOffset < this.maxScrollOffset) {
+      newOffset = this.maxScrollOffset; // Limiter le défilement vers la droite
+    }
+    
+    this.scrollOffset = newOffset;
+  }
+
+
+  selectTheme(theme: string) {
+    this.selectedTheme = theme;
+    this.isDropdownOpen = false;
+    // Ici vous pouvez ajouter la logique pour appliquer le thème
+    console.log('Thème sélectionné:', theme);
+  }
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
+  }
+
+  // Fermer le dropdown si on clique à l'extérieur
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeDropdown();
+    }
+  }
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    this.closeDropdown();
+  }
+
+    
 // methode pour la bar de progression
   private createBarChart(): void {
     if (!this.isBrowser || !this.barChartRef?.nativeElement) return;
@@ -551,7 +635,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           datasets: [{
             data: data.map(item => item.value),
             backgroundColor: ['#95A4FC', '#096BFF', '#1C1C1C', '#FFC803'],
-            borderRadius: 4,
+            borderRadius: 6,
             barThickness: 20
           }]
         },
@@ -592,43 +676,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
  
-
-  // Methode pour créer le graphique de revenus
-  // private createRevenueChart(): void {
-  //   if (!this.isBrowser || !this.revenueChartRef?.nativeElement) return;
-
-  //   try {
-  //     const ctx = this.revenueChartRef.nativeElement.getContext('2d');
-  //     if (!ctx) return;
-
-  //     const revenue = this.revenueData();
-      
-  //     this.revenueChart = new Chart(ctx, {
-  //       type: 'doughnut',
-  //       data: {
-  //         labels: ['Bâtiments occupés', 'Bâtiments vacants'],
-  //         datasets: [{
-  //           data: [revenue.occupied, revenue.vacant],
-  //           backgroundColor: ['#3B82F6', '#93C5FD'],
-  //           borderWidth: 0
-  //         }]
-  //       },
-  //       options: {
-  //         responsive: true,
-  //         maintainAspectRatio: false,
-  //         cutout: '60%',
-  //         plugins: {
-  //           legend: {
-  //             display: false
-  //           }
-  //         }
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.error('Erreur lors de la création du graphique de revenus:', error);
-  //   }
-  // }
   /**
+   * Crée le graphique de progression
    * Crée le graphique donut avec Chart.js
    */
   private createChart(): void {
@@ -770,21 +819,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Chart created successfully');
   }
   
-  // Méthode pour mettre à jour les données (utile pour plus tard avec l'API)
-  updateChartData(occupied: number, vacant: number): void {
-    this.occupiedPercentage = occupied;
-    this.vacantPercentage = vacant;
-    
-    if (this.chart) {
-      this.chart.data.datasets[0].data = [occupied, vacant];
-      this.chart.update();
-    }
-  }
-
-
-
-
-
+  
 
 
 
@@ -908,10 +943,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // methode pour le graphique géographique
-  private drawPieChart() {
+  drawPieChart() {
     const canvas = this.pieChart.nativeElement;
     const ctx = canvas.getContext('2d');
     
+    if (!ctx) {
+      console.warn('Cannot get canvas context');
+      return;
+    }
     if (!ctx) return;
 
     const centerX = canvas.width / 2;
@@ -962,6 +1001,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.createChart();
   }
 
+  
 
   // onPeriodChange(period: string): void {
   //   this.selectedPeriod.set(period);
@@ -994,7 +1034,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isBrowser) {
       // Exemple d'exportation côté client
       const data = {
-        statCards: this.statCards(),
+        // statCards: this.statCards(),
         barChartData: this.barChartData(),
         // completionRate: this.completionRate(),
         revenueData: this.revenueData(),
@@ -1040,152 +1080,77 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.isBrowser;
   }
 
-
+ 
   private initMap(): void {
-    this.map = L.map(this.mapContainer.nativeElement, {
-      center: [14.4974, -14.4524],
-      zoom: 7,
-      zoomControl: true
+    this.map = L.map('map', {
+      center: [14.5, -14.5],
+      zoom: 8,
     });
 
-    // Tuile de base
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
 
-    this.regionLayers = L.layerGroup().addTo(this.map);
-  }
-
-  private addRegions(): void {
-    Object.entries(this.regionsData).forEach(([key, region]) => {
-      const color = this.getColor(region.density);
-      
-      // Polygone de la région
-      const polygon = L.polygon(region.coords, {
-        color: '#2d3748',
-        weight: 2,
-        opacity: 0.8,
-        fillColor: color,
-        fillOpacity: 0.7
-      });
-
-      // Popup avec informations
-      polygon.bindPopup(this.createPopupContent(region));
-
-      // Événements
-      polygon.on('mouseover', (e) => {
-        polygon.setStyle({
-          weight: 3,
-          fillOpacity: 0.9
-        });
-      });
-
-      polygon.on('mouseout', (e) => {
-        polygon.setStyle({
-          weight: 2,
+    // Ajout des régions colorées
+    L.geoJSON(this.regions as any, {
+      style: (feature: any) => {
+        const region = feature.properties.name;
+        const density = this.regionDensities[region] || 0;
+        return {
+          fillColor: this.getColor(density),
+          weight: 1,
+          opacity: 1,
+          color: '#999',
           fillOpacity: 0.7
-        });
-      });
-
-      polygon.on('click', (e) => {
-        this.selectRegion(key, region);
-      });
-
-      this.regionLayers.addLayer(polygon);
-
-      // Label de la région
-      const marker = L.marker(region.center, {
-        icon: L.divIcon({
-          className: 'region-label',
-          html: `<div class="bg-white bg-opacity-90 px-2 py-1 rounded border border-gray-400 text-xs font-bold text-gray-800">${region.name}</div>`,
-          iconSize: [100, 20],
-          iconAnchor: [50, 10]
-        })
-      });
-      this.regionLayers.addLayer(marker);
-
-      // Marqueurs pour les villes principales
-      region.cities.forEach((city, index) => {
-        if (index < 2) { // Limiter à 2 villes principales par région
-          const cityMarker = L.circleMarker(region.center, {
-            radius: 4,
-            fillColor: '#1f2937',
-            color: '#fff',
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-          });
-          cityMarker.bindTooltip(city, { permanent: false, direction: 'top' });
-          this.regionLayers.addLayer(cityMarker);
-        }
-      });
-    });
-  }
-
-  private getColor(density: number): string {
-    if (density > 100) return '#7f1d1d'; // > 100
-    if (density >= 70) return '#b91c1c';  // 70-100
-    if (density >= 45) return '#dc2626';  // 45-70
-    if (density >= 25) return '#ea580c';  // 25-45
-    if (density >= 10) return '#f59e0b';  // 10-25
-    return '#fbbf24'; // < 10
-  }
-
-  private createPopupContent(region: RegionData): string {
-    return `
-      <div class="p-3 min-w-[200px]">
-        <h3 class="font-bold text-lg text-gray-800 mb-2">${region.name}</h3>
-        <div class="space-y-1 text-sm">
-          <p><span class="font-semibold">Densité:</span> ${region.density}/km²</p>
-          <p><span class="font-semibold">Propriétés:</span> ${region.properties.toLocaleString()}</p>
-          <p><span class="font-semibold">Population:</span> ${region.population.toLocaleString()}</p>
-          <p><span class="font-semibold">Villes principales:</span> ${region.cities.slice(0, 3).join(', ')}</p>
-        </div>
-      </div>
-    `;
-  }
-
-  private addLegend(): void {
-    const legend = new L.Control({ position: 'bottomright' });
-    legend.onAdd = () => {
-      const div = L.DomUtil.create('div', 'legend bg-white p-3 rounded-lg shadow-lg border');
-      div.innerHTML = `
-        <div class="bg-blue-500 text-white p-2 rounded-t font-bold text-sm mb-2">Densité immobilière</div>
-        <div class="space-y-1 text-xs">
-          <div class="flex items-center"><div class="w-4 h-3 mr-2 border" style="background: #fbbf24;"></div>< 10</div>
-          <div class="flex items-center"><div class="w-4 h-3 mr-2 border" style="background: #f59e0b;"></div>10 à 25</div>
-          <div class="flex items-center"><div class="w-4 h-3 mr-2 border" style="background: #ea580c;"></div>25 à 45</div>
-          <div class="flex items-center"><div class="w-4 h-3 mr-2 border" style="background: #dc2626;"></div>45 à 70</div>
-          <div class="flex items-center"><div class="w-4 h-3 mr-2 border" style="background: #b91c1c;"></div>70 à 100</div>
-          <div class="flex items-center"><div class="w-4 h-3 mr-2 border" style="background: #7f1d1d;"></div>> 100</div>
-        </div>
-      `;
-      return div;
-    };
-    legend.addTo(this.map);
-  }
-
-  selectRegion(key: string, region: RegionData): void {
-    this.selectedRegion = key;
-    this.regionInfo = region;
-    this.showRegionInfo = true;
-    this.map.setView(region.center, 9);
-  }
-
-  // onRegionChange(): void {
-  //   if (this.selectedRegion) {
-  //     const region = this.regionsData[this.selectedRegion];
-  //     this.selectRegion(this.selectedRegion, region);
-  //   }
-  // }
-
-  resetView(): void {
-    this.map.setView([14.4974, -14.4524], 7);
-    this.showRegionInfo = false;
-    this.selectedRegion = '';
-  }
-
-  getRegionKeys(): string[] {
-    return Object.keys(this.regionsData);
-  }
+        };
+      },
+      
+onEachFeature: (feature: Feature, layer: L.Layer) => {
+  const region = (feature.properties as any).name;
+  const density = this.regionDensities[region] || 0;
+  layer.bindTooltip(`${region} : ${density}`);
 }
+    }).addTo(this.map);
+  }
+
+  private getColor(d: number): string {
+    return d > 100 ? '#7f1d1d' :
+           d > 70  ? '#b91c1c' :
+           d > 45  ? '#ef4444' :
+           d > 25  ? '#f97316' :
+           d > 10  ? '#fdba74' :
+                     '#fef3c7';
+  }
+  
+  private getStyle = (feature: any) => {
+    const density = feature.properties.density;
+    return {
+      fillColor: getColor(density),
+      weight: 1,
+      opacity: 1,
+      color: 'white',
+      fillOpacity: 0.7
+    };
+  };
+  
+  private onEachFeature = (feature: any, layer: any) => {
+    const name = feature.properties.name || 'Département';
+    const density = feature.properties.density || 'N/A';
+    layer.bindPopup(`<strong>${name}</strong><br/>Densité : ${density}`);
+  };
+  
+
+  
+}
+
+// 💡 Couleur selon densité (identique à la légende sur l’image)
+function getColor(d: number): string {
+  return d > 100 ? '#6A0D1F' :
+         d > 70  ? '#B22222' :
+         d > 45  ? '#FF7F50' :
+         d > 25  ? '#FFA07A' :
+         d > 10  ? '#FFE4B5' :
+                   '#F5F5DC';
+}
+
+

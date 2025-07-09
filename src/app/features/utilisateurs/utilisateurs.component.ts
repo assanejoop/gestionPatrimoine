@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
@@ -8,12 +9,14 @@ Chart.register(annotationPlugin);
 
 @Component({
   standalone:true,
+  imports:[CommonModule],
   selector: 'app-utilisateurs',
   templateUrl: './utilisateurs.component.html',
   styleUrls: ['./utilisateurs.component.css']
 })
 export class UtilisateursComponent implements OnInit {
 
+  isOpen=false;
   constructor() { }
 
   ngOnInit(): void {
@@ -70,6 +73,25 @@ export class UtilisateursComponent implements OnInit {
     });
   }
 
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
+  }
   private createConnectionsChart(): void {
     const ctx = document.getElementById('connectionsChart') as HTMLCanvasElement;
     if (!ctx) return;

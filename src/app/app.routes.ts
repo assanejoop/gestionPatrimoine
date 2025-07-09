@@ -43,7 +43,7 @@ export const routes: Routes = [
           loadComponent: () => import('./features/documents-archivage/documents-archivage.component').then(m => m.DocumentsArchivageComponent)
         },
         {
-          path: 'gestion-locative',
+          path: 'location',
           loadComponent: () => import('./features/gestion-locative/gestion-locative.component').then(m => m.GestionLocativeComponent)
         },
         {

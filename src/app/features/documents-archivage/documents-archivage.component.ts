@@ -42,11 +42,10 @@ interface ExecutionDelay {
 }
 
 @Component({
-  selector: 'app-documents-archivage',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './documents-archivage.component.html',
-  styleUrls: ['./documents-archivage.component.css']
+    selector: 'app-documents-archivage',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './documents-archivage.component.html',
+    styleUrls: ['./documents-archivage.component.css']
 })
 export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDestroy {
   
@@ -57,7 +56,7 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
   @ViewChild('lineChart', { static: false }) lineChartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private charts: Chart[] = [];
-
+ isOpen=false;
   // Données principales
   documentStats: DocumentStats = {
     associatedDocuments: 1248,
@@ -125,6 +124,26 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
     this.charts.forEach(chart => chart.destroy());
   }
 
+
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  exportToPDF() {
+    console.log('Export en PDF...');
+    // Ajoutez ici votre logique d'export PDF
+    this.closeDropdown();
+  }
+
+  exportToExcel() {
+    console.log('Export en Excel...');
+    // Ajoutez ici votre logique d'export Excel
+    this.closeDropdown();
+  }
   private createBarChart(): void {
     if (!this.barChartCanvas) return;
 

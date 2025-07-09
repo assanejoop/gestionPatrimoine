@@ -12,11 +12,10 @@ interface Building {
 }
 
 @Component({
-  selector: 'app-building',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './building.component.html',
-  styleUrls: ['./building.component.css']
+    selector: 'app-building',
+    imports: [CommonModule],
+    templateUrl: './building.component.html',
+    styleUrls: ['./building.component.css']
 })
 export class BuildingComponent implements OnInit {
   buildings: Building[] = [];

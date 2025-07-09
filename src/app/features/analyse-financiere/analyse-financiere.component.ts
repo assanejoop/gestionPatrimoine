@@ -1,18 +1,52 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import { TravauxComponent } from "../travaux/travaux.component";
+import { DocumentsComponent } from "../documents/documents.component";
+import { OptimisationComponent } from "../optimisation/optimisation.component";
+
+
+
 
 // Enregistrer tous les composants Chart.js nécessaires
 Chart.register(...registerables);
 
+interface Tab {
+  id: string;
+  label: string;
+}
+
+
 @Component({
-  selector: 'app-analyse-financiere',
-  standalone: true,
-  imports: [],
-  templateUrl: './analyse-financiere.component.html',
-  styleUrl: './analyse-financiere.component.css'
+    selector: 'app-analyse-financiere',
+    imports: [CommonModule, TravauxComponent, DocumentsComponent, OptimisationComponent],
+    templateUrl: './analyse-financiere.component.html',
+    styleUrl: './analyse-financiere.component.css'
 })
 export class AnalyseFinanciereComponent implements OnInit {
+  
+  activeTab: string = 'location';
+  isOpen = false;
+  
+  tabs = [
+    { name: 'Locations', active: true, link: '#' },
+    { name: 'Travaux', active: false, link: '#', highlight: true },
+    { name: 'Documents & Prestations', active: false, link: '#' },
+    { name: 'Optimisation', active: false, link: '#' },
+  ];
 
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    // Optionnel: mettre à jour le tableau tabs
+    this.tabs.forEach(t => t.active = false);
+    const currentTab = this.tabs.find(t => t.name.toLowerCase() === tab.toLowerCase());
+    if (currentTab) {
+      currentTab.active = true;
+    }
+  }
+
+
+  
   constructor() { }
 
   ngOnInit(): void {
@@ -22,7 +56,26 @@ export class AnalyseFinanciereComponent implements OnInit {
       this.createExpensesEvolutionChart();
     }, 100);
   }
+//  methode pour le dropdow
+toggleDropdown() {
+  this.isOpen = !this.isOpen;
+}
 
+closeDropdown() {
+  this.isOpen = false;
+}
+
+exportToPDF() {
+  console.log('Export en PDF...');
+  // Ajoutez ici votre logique d'export PDF
+  this.closeDropdown();
+}
+
+exportToExcel() {
+  console.log('Export en Excel...');
+  // Ajoutez ici votre logique d'export Excel
+  this.closeDropdown();
+}
   createCostSitesChart(): void {
     const ctx = document.getElementById('costSitesChart') as HTMLCanvasElement;
     if (ctx) {
@@ -32,8 +85,8 @@ export class AnalyseFinanciereComponent implements OnInit {
           labels: ['Résidence A', 'Résidence B', 'Résidence C', 'Résidence D'],
           datasets: [{
             data: [300, 250, 230, 190],
-            backgroundColor: '#FB923C',
-            borderRadius: 8,
+            backgroundColor: '#FF5C0280',
+            borderRadius: 1,
             borderSkipped: false,
             barPercentage: 0.5, // Réduit la largeur des barres (valeur entre 0 et 1)
             categoryPercentage: 0.8 // Ajuste l'espace entre les groupes de barres
@@ -160,4 +213,7 @@ export class AnalyseFinanciereComponent implements OnInit {
       });
     }
   }
+  // setActiveTab(tab: string): void {
+  //   this.activeTab = tab;
+  // }
 }

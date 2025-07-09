@@ -21,10 +21,9 @@ interface Task {
 }
 
 @Component({
-  selector: 'app-building-maintenance',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './building-maintenance.component.html'
+    selector: 'app-building-maintenance',
+    imports: [CommonModule, FormsModule],
+    templateUrl: './building-maintenance.component.html'
 })
 export class BuildingMaintenanceComponent implements OnInit {
   tabs: Tab[] = [

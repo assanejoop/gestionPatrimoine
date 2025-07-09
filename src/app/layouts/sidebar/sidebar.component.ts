@@ -3,11 +3,25 @@ import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
+
+
+export interface MenuItem {
+  name: string;
+  route?: string;
+  icon: string;
+  expanded?: boolean;
+  subItems?: SubMenuItem[];
+}
+
+export interface SubMenuItem {
+  name: string;
+  route: string;
+  icon: string;
+}
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './sidebar.component.html'
+    selector: 'app-sidebar',
+    imports: [CommonModule, RouterModule],
+    templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
   private router = inject(Router);
@@ -20,30 +34,25 @@ export class SidebarComponent implements OnInit {
       expanded: false,
       route: '/dashboard',
       subItems: [
-        { name: 'Etat du Patrimoine', route: '/dashboard' },
-        { name: 'Geolocatisation et Densité', route: '/dashboard/geolocalisation' },
-        { name: 'Documents et Archivage', route: '/dashboard/documents-archivage' },
-        { name: 'Travaux Maintenance', route: '/dashboard/travaux-maintenance' },
-        { name: 'Gestion Locative', route: '/dashboard/gestion-locative' },
-        { name: 'Fournisseurs', route: '/dashboard/fournisseurs' },
-        { name: 'Rapports', route: '/dashboard/rapport' },
-        { name: 'Analyses Financières', route: '/dashboard/analyse-financiere' }
+        { name: 'Etat du Patrimoine', route: '/dashboard', icon: 'chart-bar' },
+        { name: 'Geolocatisation et Densité', route: '/dashboard/geolocalisation', icon: 'map' },
+        { name: 'Documents et Archivage', route: '/dashboard/documents-archivage', icon: 'archive' },
+        { name: 'Locations', route: '/dashboard/location', icon: 'home' },
+        { name: 'Travaux Maintenance', route: '/dashboard/travaux-maintenance', icon: 'tools' },
+        { name: 'Fournisseurs', route: '/dashboard/fournisseurs', icon: 'truck' },
+        { name: 'Utilisateurs et Accès', route: '/dashboard/utilisateurs', icon: 'user-friend'},
+        { name: 'Rapports et Exports', route: '/dashboard/rapport', icon: 'document-report' },
+        { name: 'Financier-Analyse Globale', route: '/dashboard/analyse-financiere', icon: 'calculator' }
       ]
     },
-    { 
-      name: 'Utilisateurs', 
-      icon: 'users', 
-      expanded: false,
-      route: '/dashboard/utilisateurs'  // Correction: route vers utilisateurs
-    },
+    
     { 
       name: 'Biens immobiliers', 
       icon: 'buildings', 
-      expanded: false,  // Changé à false par défaut
-      // Supprimé la route car on a des subItems
+      expanded: false,
       subItems: [
-        { name: 'Liste des bâtiments', route: '/dashboard/building' },
-        { name: 'Cartographie', route: '/dashboard/building/maps' }
+        { name: 'Liste des bâtiments', route: '/dashboard/building', icon: 'building-office' },
+        { name: 'Cartographie', route: '/dashboard/building/maps', icon: 'map-pin' }
       ]
     },
     { 
@@ -60,6 +69,12 @@ export class SidebarComponent implements OnInit {
     }
   ]);
 
+  // methode pour les icones 
+
+  
+  
+  
+item: any;
   ngOnInit(): void {
     this.initTheme();
   }
