@@ -26,7 +26,7 @@ export interface SubMenuItem {
 export class SidebarComponent implements OnInit {
   private router = inject(Router);
   
-  currentTheme = signal<'light' | 'dark'>('light');
+  // currentTheme = signal<'light' | 'dark'>('light');
   menuItems = signal([
     { 
       name: 'Tableau de bord', 
@@ -76,45 +76,46 @@ export class SidebarComponent implements OnInit {
   
 item: any;
   ngOnInit(): void {
-    this.initTheme();
+    // this.initTheme();
   }
 
-  initTheme(): void {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark' || savedTheme === 'light') {
-        this.currentTheme.set(savedTheme);
-      } else {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          this.currentTheme.set('dark');
-        }
-      }
+  // methode pour les couleurs sombres et claire 
+  // initTheme(): void {
+  //   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+  //     const savedTheme = localStorage.getItem('theme');
+  //     if (savedTheme === 'dark' || savedTheme === 'light') {
+  //       this.currentTheme.set(savedTheme);
+  //     } else {
+  //       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  //         this.currentTheme.set('dark');
+  //       }
+  //     }
       
-      this.applyTheme(this.currentTheme());
+  //     this.applyTheme(this.currentTheme());
       
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        if (!localStorage.getItem('theme')) {
-          this.setTheme(event.matches ? 'dark' : 'light');
-        }
-      });
-    }
-  }
+  //     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+  //       if (!localStorage.getItem('theme')) {
+  //         this.setTheme(event.matches ? 'dark' : 'light');
+  //       }
+  //     });
+  //   }
+  // }
 
-  setTheme(theme: 'light' | 'dark'): void {
-    this.currentTheme.set(theme);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('theme', theme);
-    }
-    this.applyTheme(theme);
-  }
+  // setTheme(theme: 'light' | 'dark'): void {
+  //   this.currentTheme.set(theme);
+  //   if (typeof localStorage !== 'undefined') {
+  //     localStorage.setItem('theme', theme);
+  //   }
+  //   this.applyTheme(theme);
+  // }
 
-  applyTheme(theme: string): void {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }
+  // applyTheme(theme: string): void {
+  //   if (theme === 'dark') {
+  //     document.documentElement.classList.add('dark');
+  //   } else {
+  //     document.documentElement.classList.remove('dark');
+  //   }
+  // }
 
   // Méthode améliorée pour gérer les clics sur les items
   onMenuItemClick(item: any, index: number): void {
