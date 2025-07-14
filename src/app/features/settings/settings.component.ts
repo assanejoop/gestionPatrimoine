@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+ import { Component } from '@angular/core';
+
 
 @Component({
     selector: 'app-settings',
@@ -7,5 +8,4 @@ import { Component } from '@angular/core';
     styleUrl: './settings.component.css'
 })
 export class SettingsComponent {
-
 }

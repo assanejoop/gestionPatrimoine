@@ -4,6 +4,8 @@ import { Routes } from '@angular/router';
 import { BuildingDetailComponent } from './features/building-detail/building-detail.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { BuildingModalComponent } from './features/building-modal/building-modal.component';
+import { DetailTaravauxComponent } from './features/detail-taravaux/detail-taravaux.component';
 
 
 export const routes: Routes = [
@@ -26,10 +28,11 @@ export const routes: Routes = [
           path: 'building-detail/:id', // ou simplement 'building-detail' si vous n'utilisez pas de paramètre
           component: BuildingDetailComponent
         },
-        {
-          path: 'building',
-          loadComponent: () => import('./features/building/building.component').then(m => m.BuildingComponent)
-        },
+        // { path: 'building-modal', component: BuildingModalComponent },
+        // {
+        //   path: 'building',
+        //   loadComponent: () => import('./features/building/building.component').then(m => m.BuildingComponent)
+        // },
         {
           path: 'fournisseurs',
           loadComponent: () => import('./features/fournisseurs/fournisseurs.component').then(m => m.FournisseursComponent)
@@ -66,15 +69,23 @@ export const routes: Routes = [
           path: 'travaux-maintenance',
           loadComponent: () => import('./features/travaux-maintenance/travaux-maintenance.component').then(m => m.TravauxMaintenanceComponent)
         },
-      {
-        path: 'users',
-        loadComponent: () => import('./features/users/users.component').then(m => m.UsersComponent)
-      },
+      // {
+      //   path: 'users',
+      //   loadComponent: () => import('./features/users/users.component').then(m => m.UsersComponent)
+      // },
       {
         path: 'settings',
         loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent)
       }
     ]
+  },
+  {
+    path: 'building-modal',
+    component: BuildingModalComponent
+  },
+  {
+    path: 'detail-travaux',
+    component: DetailTaravauxComponent
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 ];

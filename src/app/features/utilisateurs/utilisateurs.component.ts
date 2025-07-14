@@ -5,45 +5,45 @@ import { AnnotationOptions } from 'chartjs-plugin-annotation';
 
 // Enregistrez uniquement le plugin d'annotation
 import annotationPlugin from 'chartjs-plugin-annotation';
+
 Chart.register(annotationPlugin);
 
 @Component({
   standalone:true,
-  imports:[CommonModule],
+  imports: [CommonModule],
   selector: 'app-utilisateurs',
   templateUrl: './utilisateurs.component.html',
   styleUrls: ['./utilisateurs.component.css']
 })
-export class UtilisateursComponent implements OnInit {
-
-  isOpen=false;
-  constructor() { }
+export class UtilisateursComponent  {
+   constructor() { }
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.createRoleChart(); 
+      this.createRoleChart();
       this.createConnectionsChart();
       this.createUsageChart();
       this.createFailedLoginsChart();
     }, 100);
   }
+
   private createRoleChart(): void {
     const ctx = document.getElementById('roleChart') as HTMLCanvasElement;
     if (!ctx) return;
 
     new Chart(ctx, {
-      type: 'doughnut',
+      type: 'pie', // Changé de 'doughnut' à 'pie' pour un cercle plein
       data: {
         labels: ['Admin', 'Utilisateur', 'Consultant'],
         datasets: [{
-          data: [15, 100, 41],
+          data: [20, 61,70],
           backgroundColor: [
-            '#3B82F6', // blue-500
-            '#10B981', // emerald-500
-            '#8B5CF6'  // violet-500
+            '#3B82F6', // Bleu
+            '#10B981', // Vert
+            '#F59E0B'  // Jaune/Orange
           ],
           borderWidth: 0,
-          hoverOffset: 8
+          hoverOffset: 4
         }]
       },
       options: {
@@ -54,44 +54,27 @@ export class UtilisateursComponent implements OnInit {
             position: 'bottom',
             labels: {
               boxWidth: 12,
-              padding: 20
+              padding: 15,
+              usePointStyle: true,
+              pointStyle: 'circle'
             }
           },
           tooltip: {
             callbacks: {
               label: (context) => {
-                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const total = (context.dataset.data as number[]).reduce((a, b) => a + b, 0);
                 const value = context.raw as number;
                 const percentage = Math.round((value / total) * 100);
                 return `${context.label}: ${value} (${percentage}%)`;
               }
             }
           }
-        },
-        cutout: '70%'
+        }
+        // Supprimé cutout pour avoir un cercle plein
       }
     });
   }
 
-  toggleDropdown() {
-    this.isOpen = !this.isOpen;
-  }
-
-  closeDropdown() {
-    this.isOpen = false;
-  }
-
-  exportToPDF() {
-    console.log('Export en PDF...');
-    // Ajoutez ici votre logique d'export PDF
-    this.closeDropdown();
-  }
-
-  exportToExcel() {
-    console.log('Export en Excel...');
-    // Ajoutez ici votre logique d'export Excel
-    this.closeDropdown();
-  }
   private createConnectionsChart(): void {
     const ctx = document.getElementById('connectionsChart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -102,14 +85,16 @@ export class UtilisateursComponent implements OnInit {
         labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
         datasets: [{
           label: 'Connexions actives',
-          data: [850, 920, 1020, 1100, 1200, 1248],
+          data: [120, 150, 130, 180, 210, 200], // Données ajustées avec pic en février puis descente
           borderColor: '#3B82F6',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           borderWidth: 2,
           pointBackgroundColor: '#3B82F6',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 6,
-          fill: true,
+          fill: false,
           tension: 0.4
         }]
       },
@@ -128,9 +113,13 @@ export class UtilisateursComponent implements OnInit {
         scales: {
           y: {
             beginAtZero: false,
+            min: 100,
+            max: 220,
             grid: {
-              drawOnChartArea: true,
-              color: 'rgba(0, 0, 0, 0.05)'
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              stepSize: 20
             }
           },
           x: {
@@ -138,6 +127,10 @@ export class UtilisateursComponent implements OnInit {
               display: false
             }
           }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index'
         }
       }
     });
@@ -153,20 +146,15 @@ export class UtilisateursComponent implements OnInit {
         labels: ['Tableau de bord', 'Profil', 'Historique', 'Alertes', 'Exports'],
         datasets: [{
           label: 'Utilisation (%)',
-          data: [85, 72, 58, 45, 30],
-          backgroundColor: [
-            '#3B82F6', // blue-500
-            '#10B981', // emerald-500
-            '#8B5CF6', // violet-500
-            '#F59E0B', // amber-500
-            '#EF4444'  // red-500
-          ],
+          data: [85, 65, 58, 40, 30],
+          backgroundColor: '#3B82F6',
           borderRadius: 4,
-          borderSkipped: false
+          borderSkipped: false,
+          barThickness: 20
         }]
       },
       options: {
-        indexAxis: 'y',
+        indexAxis: 'y' as const, // Barres horizontales
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -181,9 +169,16 @@ export class UtilisateursComponent implements OnInit {
         },
         scales: {
           x: {
+            beginAtZero: true,
             max: 100,
             grid: {
-              drawOnChartArea: false
+              display: false
+            },
+            ticks: {
+              stepSize: 20,
+              callback: function(value) {
+                return value + '%';
+              }
             }
           },
           y: {
@@ -199,40 +194,19 @@ export class UtilisateursComponent implements OnInit {
   private createFailedLoginsChart(): void {
     const ctx = document.getElementById('failedLoginsChart') as HTMLCanvasElement;
     if (!ctx) return;
-  
-    const annotation: AnnotationOptions = {
-      type: 'line',
-      yMin: 10,
-      yMax: 10,
-      borderColor: '#EF4444',
-      borderWidth: 2,
-      borderDash: [6, 6],
-      label: {
-        content: 'Seuil d\'alerte',
-        position: 'end' as const, // Correction ici - utilisez 'end' au lieu de 'right'
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
-        color: 'white',
-        font: {
-          weight: 'bold'
-        },
-        padding: {
-          x: 10,
-          y: 4
-        },
-        borderRadius: 4
-      }
-    };
-  
+
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+        labels: ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin'],
         datasets: [{
           label: 'Connexions échouées',
-          data: [12, 19, 15, 8, 11, 6],
-          backgroundColor: '#EF4444',
+          data: [2, 6, 8, 3, 12, 14],
+          backgroundColor: '#FB923C', // Couleur orange comme dans l'image
           borderRadius: 4,
-          borderSkipped: false
+          borderSkipped: false,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8
         }]
       },
       options: {
@@ -244,16 +218,52 @@ export class UtilisateursComponent implements OnInit {
           },
           annotation: {
             annotations: {
-              line1: annotation
+              line1: {
+                type: 'line' as const,
+                yMin: 10,
+                yMax: 10,
+                borderColor: '#EF4444',
+                borderWidth: 2,
+                borderDash: [6, 6],
+                label: {
+                  content: "Seuil d'alerte",
+                  // enabled: true,
+                  position: 'end' as const,
+                  backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                  color: 'white',
+                  font: {
+                    size: 10,
+                    weight: 'bold'
+                  },
+                  padding: {
+                    x: 8,
+                    y: 4
+                  },
+                  borderRadius: 4
+                }
+              }
             }
           }
         },
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            max: 16,
+            ticks: {
+              stepSize: 2
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
           }
         }
       }
     });
   }
 }
+

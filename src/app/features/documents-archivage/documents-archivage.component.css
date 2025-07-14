@@ -1,0 +1,22 @@
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+  }
+  
+  /* Style pour le dropdown */
+  .dropdown-menu {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Animation pour le dropdown */
+  .dropdown-enter {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  
+  .dropdown-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.15s ease-out;
+  }

@@ -1,88 +1,116 @@
-<div class="container mx-auto px-4 py-6">
+<div class=" px-4 py-6  bg-fourth p-6 max-w-7xl mx-auto ">
   <!-- Header section -->
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Gestion et Consultation des Bâtiments de l'État</h1>
-    <button class="mt-4 md:mt-0 flex items-center bg-blue-900 hover:bg-blue-800 text-white py-2 px-4 rounded-md">
+    <h1 class="text-2xl md:text-3xl font-semibold text-dark">Gestion et Consultation des Bâtiments de l'État</h1>
+    <button   [routerLink]="['/building-modal']" class="mt-4 md:mt-0 flex items-center bg-[#3072BC] hover:bg-[#3072BC] text-white py-2 px-4 rounded-md">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
-      Ajouter un nouveau bâtiment
+      Ajouter un bâtiment
     </button>
   </div>
 
   <!-- Description section -->
-  <p class="text-gray-700 mb-8">
-    Retrouvez ici l'ensemble des bâtiments appartenant à l'État du Sénégal, centralisés dans une interface intuitive et accessible. 
-    Grâce à des outils de recherche avancés et des filtres précis, explorez facilement le patrimoine immobilier de l'État selon 
-    différents critères : localisation, type de bâtiment, état général, ou entité propriétaire.
+  <p class="text-dark text-[16px] font-inter mb-8">
+    Ce module permet de centraliser, gérer et consulter l’ensemble des bâtiments appartenant à l’État du Sénégal  <br>
+    dans une interface unique et intuitive.
   </p>
 
   <!-- Search section -->
-  <div class="bg-gray-100 p-4 rounded-lg mb-8">
+  <div class="bg-white p-4 rounded-lg mb-8">
+    
     <div class="flex flex-col md:flex-row">
-      <div class="relative flex-grow mb-4 md:mb-0 md:mr-4">
+      <!-- Champ de recherche avec icône -->
+      <div class="relative flex-grow mb-4 md:mb-0 md:mr-4 w-2/6">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <!-- Icône loupe -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
         <input
-          type="text"
+          type="text" 
           placeholder="Retrouvez un bâtiment"
-          class="w-full py-3 px-4 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-2/6 py-3 pl-10 pr-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-fourth"
         />
       </div>
-      <button class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-6 border border-gray-300 rounded-lg shadow-sm flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    
+      <!-- Bouton filtrer avec icône -->
+      <button  (click)="openModal()" class="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-6 border border-gray-300 rounded-lg shadow-sm flex items-center justify-center space-x-2">
+        <!-- Icône filtre -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 01.8 1.6l-4.6 5.9v4.5a1 1 0 01-1.447.894l-2-1A1 1 0 019 13V9.5L4.2 4.6A1 1 0 013 4z"
+                clip-rule="evenodd" />
         </svg>
-        Rechercher
+        <span>Filtrer avancés</span>
       </button>
     </div>
+    
   </div>
 
   <!-- Results count -->
-  <div class="mb-6">
-    <h2 class="text-xl font-bold text-gray-800">
+  <div class="mb-6 flex justify-between ">
+    <h2 class="text-sm font-bold text-gray-800">
       1500 Résultats <span class="text-sm font-normal text-gray-500">au total</span>
     </h2>
+    <div class="flex justify-between">
+      <div class="w-8 h-8 rounded-[5.33px] opacity-100 p-[10px] bg-white">
+        <img src="assets/images/icones/solide.png" alt="icon" class="w-[12px] h-[12px] ">
+      </div>
+      <img src="assets/images/icones/list-view.png" alt="icon">
+      
+    </div>
   </div>
 
   <!-- Building Cards Grid - Now Clickable -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-[20px] ">
     <div *ngFor="let building of buildings" 
-         class="border border-gray-200 rounded-[14px] overflow-hidden shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-200 p-2 w-5/6 h-5/6 cursor-pointer transform hover:scale-[1.02]" 
+         class=" bg-white rounded-[14px] w-[547px]  h-[162px] overflow-hidden shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-200 p-2  hover:border-2 border-transparent cursor-pointer transform hover:scale-[1.02] card" 
          (click)="onSubmit()">
       <div class="flex flex-col md:flex-row h-full">
         <img [src]="building.imageUrl" [alt]="building.name" class="w-full md:w-1/3 h-34 md:h-full rounded-[14px] object-cover">
-        <div class="p-4 flex-1 flex flex-col justify-between">
-          <div>
-            <h3 class="text-2xl font-semibold">{{building.name}}</h3>
-            <div class="flex items-center mt-10">
-              <div class="flex items-center mr-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-                <span class="text-gray-700 text-xl">{{building.type}}</span>
-              </div>
+        <div class="p-4 flex-1 flex flex-col justify-between ">
+         <div class="gap-3">
+            <h3 class="text-[16px] font-bold  text-fiveth hover:text-[#2388FF]">{{building.name}}</h3>
+            <div class="flex items-center mt-2 mb-2">
+             
               <div class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span class="text-gray-700 text-xl">{{building.location}}</span>
+                <i class="fa-solid fa-location-dot mr-2 text-[#64748B]" ></i>
+                <span class="text-gray-700 text-xl location">{{building.location}}</span>
+              </div>
+              <div class="flex items-center  m-1">
+               <img src="assets/images/icones/adress.png" alt="" class="w-[16px] h-[13px] mr-3 ">
+                <span class="text-gray-700 text-xl location">{{building.type}}</span>
               </div>
             </div>
           </div>
           <div class="flex items-center justify-start mt-auto">
+            <div>
             <span [ngClass]="{
               'bg-green-100 text-green-800': building.status === 'Vacant',
               'bg-red-100 text-red-800': building.status === 'Occupé'
-            }" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+            }" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status mb-2">
               <span [ngClass]="{
                 'bg-green-400': building.status === 'Vacant',
                 'bg-red-400': building.status === 'Occupé'
               }" class="h-2 w-2 mr-1 rounded-full"></span>
               {{building.status}}
             </span>
+            <div class="hidden group-hover:flex items-center justify-center w-[28px] h-[28px] rounded-full border border-gray-300 absolute top-4 right-4 bg-white shadow-md transition-all">
+    
+              <div class="w-[20px] h-[20px] absolute top-[4px] left-[4px] rotate-[-90deg]">
+                <!-- Exemple d’icône -->
+                <i class="fa-solid fa-arrow-up text-gray-700 text-sm"></i>
+              </div>
+          
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- modal -->
+   
 </div>

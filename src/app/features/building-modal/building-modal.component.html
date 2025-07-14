@@ -1,0 +1,220 @@
+<div class="p-6">
+  <div class="flex items-center mb-4">
+    <button class="text-blue-500 mr-2" routerLink="/buildings">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <h1 class="text-2xl font-semibold text-gray-800">Gestion des Fiches Bâtimentaires</h1>
+  </div>
+  
+  <p class="text-gray-600 mb-8">
+    Cette section permet de créer des fiches détaillées pour chaque bien immobilier, d'y associer des documents officiels, de gérer les informations juridiques et techniques, et d'assurer une traçabilité complète via un historique des modifications.
+  </p>
+  
+  <form [formGroup]="buildingForm">
+    <!-- Indicateur d'étapes -->
+    <div class="flex justify-center mb-8">
+      <div class="flex items-center">
+        <div class="flex flex-col items-center">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" 
+               [ngClass]="{'bg-blue-500 text-white': currentStep >= 1, 'bg-gray-300 text-gray-600': currentStep < 1}">
+            1
+          </div>
+          <span class="mt-2 text-sm text-blue-500 font-medium">Informations générales</span>
+        </div>
+        <div class="w-24 h-1 mx-2" [ngClass]="{'bg-blue-500': currentStep > 1, 'bg-gray-300': currentStep <= 1}"></div>
+        <div class="flex flex-col items-center">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center"
+               [ngClass]="{'bg-blue-500 text-white': currentStep >= 2, 'bg-gray-300 text-gray-600': currentStep < 2}">
+            2
+          </div>
+          <span class="mt-2 text-sm text-gray-500 font-medium">Informations juridiques</span>
+        </div>
+        <div class="w-24 h-1 mx-2" [ngClass]="{'bg-blue-500': currentStep > 2, 'bg-gray-300': currentStep <= 2}"></div>
+        <div class="flex flex-col items-center">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center"
+               [ngClass]="{'bg-blue-500 text-white': currentStep >= 3, 'bg-gray-300 text-gray-600': currentStep < 3}">
+            3
+          </div>
+          <span class="mt-2 text-sm text-gray-500 font-medium">Documents</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Étape 1: Informations générales -->
+    <div *ngIf="currentStep === 1" class="space-y-6">
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Nom du bâtiment -->
+        <div class="col-span-1">
+          <label for="nomBatiment" class="block text-sm font-medium text-gray-700 mb-1">
+            Nom du bâtiment <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="nomBatiment" formControlName="nomBatiment" 
+                 class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 [ngClass]="{'border-red-500': buildingForm.get('nomBatiment')?.invalid && buildingForm.get('nomBatiment')?.touched, 'border-gray-300': !(buildingForm.get('nomBatiment')?.invalid && buildingForm.get('nomBatiment')?.touched)}"
+                 placeholder="Entrer le nom du bâtiment">
+          <div *ngIf="buildingForm.get('nomBatiment')?.invalid && buildingForm.get('nomBatiment')?.touched" class="text-red-500 text-xs mt-1">
+            Ce champ est obligatoire
+          </div>
+        </div>
+        
+        <!-- Type de bâtiment -->
+        <div class="col-span-1">
+          <label for="typeBatiment" class="block text-sm font-medium text-gray-700 mb-1">
+            Type de bâtiment <span class="text-red-500">*</span>
+          </label>
+          <select id="typeBatiment" formControlName="typeBatiment"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
+            <option value="" disabled selected>Sélectionner le type</option>
+            <option *ngFor="let type of typesBatiment" [value]="type.value">{{ type.label }}</option>
+          </select>
+        </div>
+        
+        <!-- Statut d'occupation -->
+        <div class="col-span-1">
+          <label for="statutOccupation" class="block text-sm font-medium text-gray-700 mb-1">
+            Statut d'occupation <span class="text-red-500">*</span>
+          </label>
+          <select id="statutOccupation" formControlName="statutOccupation"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
+            <option value="" disabled selected>Sélectionner le type</option>
+            <option *ngFor="let statut of statutsOccupation" [value]="statut.value">{{ statut.label }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Région -->
+        <div class="col-span-1">
+          <label for="region" class="block text-sm font-medium text-gray-700 mb-1">
+            Région <span class="text-red-500">*</span>
+          </label>
+          <select id="region" formControlName="region"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
+            <option value="" disabled selected>Sélectionner la région</option>
+            <option *ngFor="let region of regions" [value]="region.value">{{ region.label }}</option>
+          </select>
+        </div>
+        
+        <!-- Département -->
+        <div class="col-span-1">
+          <label for="departement" class="block text-sm font-medium text-gray-700 mb-1">
+            Département <span class="text-red-500">*</span>
+          </label>
+          <select id="departement" formControlName="departement"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white"
+                  [disabled]="selectedDepartements.length === 0">
+            <option value="" disabled selected>Sélectionner le département</option>
+            <option *ngFor="let dept of selectedDepartements" [value]="dept.value">{{ dept.label }}</option>
+          </select>
+        </div>
+        
+        <!-- Commune -->
+        <div class="col-span-1">
+          <label for="commune" class="block text-sm font-medium text-gray-700 mb-1">
+            Commune <span class="text-red-500">*</span>
+          </label>
+          <select id="commune" formControlName="commune"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white"
+                  [disabled]="selectedCommunes.length === 0">
+            <option value="" disabled selected>Sélectionner la commune</option>
+            <option *ngFor="let commune of selectedCommunes" [value]="commune.value">{{ commune.label }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Adresse -->
+        <div class="col-span-1">
+          <label for="adresse" class="block text-sm font-medium text-gray-700 mb-1">
+            Adresse <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="adresse" formControlName="adresse"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 placeholder="Entrer l'adresse du bâtiment">
+        </div>
+        
+        <!-- Superficie -->
+        <div class="col-span-1">
+          <label for="superficie" class="block text-sm font-medium text-gray-700 mb-1">
+            Superficie (m²) <span class="text-red-500">*</span>
+          </label>
+          <input type="number" id="superficie" formControlName="superficie"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 placeholder="Entrer la superficie">
+        </div>
+        
+        <!-- Nombre d'étages -->
+        <div class="col-span-1">
+          <label for="nombreEtages" class="block text-sm font-medium text-gray-700 mb-1">
+            Nombre d'étages <span class="text-red-500">*</span>
+          </label>
+          <input type="number" id="nombreEtages" formControlName="nombreEtages"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 placeholder="Entrer le nombre">
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-6">
+        <!-- Date de construction -->
+        <div class="col-span-1 max-w-xs">
+          <label for="dateConstruction" class="block text-sm font-medium text-gray-700 mb-1">
+            Date de construction <span class="text-red-500">*</span>
+          </label>
+          <input type="date" id="dateConstruction" formControlName="dateConstruction"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-6">
+        <!-- Description -->
+        <div class="col-span-1">
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
+            Description
+          </label>
+          <textarea id="description" formControlName="description" rows="4"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Ajouter une description détaillée...."></textarea>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Étape 2: Informations juridiques (à implémenter) -->
+    <div *ngIf="currentStep === 2">
+      <!-- Contenu de l'étape 2 à ajouter ultérieurement -->
+    </div>
+    
+    <!-- Étape 3: Documents (à implémenter) -->
+    <div *ngIf="currentStep === 3">
+      <!-- Contenu de l'étape 3 à ajouter ultérieurement -->
+    </div>
+    
+    <!-- Boutons de navigation -->
+    <div class="flex justify-between mt-8">
+      <button type="button" (click)="previousStep()" 
+              class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              [disabled]="currentStep === 1">
+        Annuler
+      </button>
+      
+      <div class="flex space-x-4">
+        <button type="button" (click)="previousStep()" 
+                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                [disabled]="currentStep === 1">
+          Précédent
+        </button>
+        
+        <button *ngIf="currentStep < totalSteps" type="button" (click)="nextStep()" 
+                class="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Suivant
+        </button>
+        
+        <button *ngIf="currentStep === totalSteps" type="button" (click)="onSubmit()" 
+                class="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Soumettre
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

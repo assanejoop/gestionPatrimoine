@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 interface Tab {
   id: string;
@@ -22,7 +23,7 @@ interface Task {
 
 @Component({
     selector: 'app-building-maintenance',
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule,RouterLink], 
     templateUrl: './building-maintenance.component.html'
 })
 export class BuildingMaintenanceComponent implements OnInit {
@@ -118,6 +119,16 @@ export class BuildingMaintenanceComponent implements OnInit {
       tab.active = tab.id === tabId;
     });
   }
+
+  showModal = false;
+
+openModal() {
+  this.showModal = true;
+}
+
+closeModal() {
+  this.showModal = false;
+}
 
   toggleDropdown(dropdown: string): void {
     if (this.openDropdown === dropdown) {

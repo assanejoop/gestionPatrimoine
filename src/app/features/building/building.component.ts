@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { BuildingModalComponent } from '../building-modal/building-modal.component';
+
 
 interface Building {
   id: number;
@@ -13,7 +15,7 @@ interface Building {
 
 @Component({
     selector: 'app-building',
-    imports: [CommonModule],
+    imports: [CommonModule, RouterLink],
     templateUrl: './building.component.html',
     styleUrls: ['./building.component.css']
 })
@@ -26,7 +28,9 @@ export class BuildingComponent implements OnInit {
     date: false
   };
 
-  constructor(private router: Router) { }
+  private readonly router = inject(Router);
+
+  
 
   ngOnInit(): void {
     // Simuler les données de l'API
@@ -77,7 +81,7 @@ export class BuildingComponent implements OnInit {
         type: 'Résidence',
         location: 'Dakar',
         status: 'Vacant',
-        imageUrl: 'assets/buildings/building6.jpg'
+        imageUrl: 'assets/images/bg3.png'
       },
       {
         id: 7,
@@ -85,7 +89,7 @@ export class BuildingComponent implements OnInit {
         type: 'Résidence',
         location: 'Dakar',
         status: 'Vacant',
-        imageUrl: 'assets/buildings/building6.jpg'
+        imageUrl: 'assets/images/bg3.png'
       },
       {
         id: 8,
@@ -93,10 +97,21 @@ export class BuildingComponent implements OnInit {
         type: 'Résidence',
         location: 'Dakar',
         status: 'Vacant',
-        imageUrl: 'assets/buildings/building4.jpg'
+        imageUrl: 'assets/images/building4.png'
       }
     ];
   }
+
+  showModal = false;
+
+openModal() {
+  this.showModal = true;
+}
+
+closeModal() {
+  this.showModal = false;
+}
+
 
   toggleFilter(filterName: string): void {
     this.activeFilters[filterName] = !this.activeFilters[filterName];
@@ -121,4 +136,6 @@ export class BuildingComponent implements OnInit {
   onSubmit(): void {
     this.router.navigate(['/dashboard/building-detail/:id']);
   }
+
+
 }

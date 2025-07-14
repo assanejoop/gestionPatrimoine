@@ -1,223 +1,247 @@
-<!-- Header -->
 
-  
-  <!-- Main Content -->
-  <div class="bg-gray-50 min-h-screen">
-    
-      
-      <!-- Page Header -->
-      <div class="mb-8">
-        <div class="flex justify-between items-start mb-6">
-          <div>
-            <h1 class="text-2xl font-bold text-dark">Documents et Archivage</h1>
-            <p class="text-gray-600 mt-2">Suivre la complétude documentaire et l'archivage</p>
-          </div>
-          
-          <!-- Controls -->
-          <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <!-- Period Selector -->
-            <div class="relative">
-              <select 
-                class="appearance-none bg-white  rounded-lg px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2  font-inter" >
-                <option class="text-dark text-sm font-inter" value="periode"> <i class="fa-regular fa-calendar"></i> Période</option>
-                <option>Cette semaine</option>
-                <option>Ce mois</option>
-                <option selected>Cette année</option>
-                <option>Toutes les périodes</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
-            </div>
-            
-    
-            
-            <!-- Region Selector -->
-            <div class="relative">
-              <select 
-                class="appearance-none bg-white rounded-[10px] px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option>Région</option>
-                <option selected>Toutes les régions</option>
-                <option>Dakar</option>
-                <option>Thiès</option>
-                <option>Saint-Louis</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
-            </div>
-            
-            <div class="relative inline-block text-left">
-              <!-- Bouton principal -->
-              <button 
-              (click)="toggleDropdown()"
-                class="bg-[#3072BC] hover:bg-[#3072BC] text-white px-6 py-2 rounded-[5px] flex items-center gap-2 transition-colors duration-200 p-[10px]">
-                <!-- <i class="fa-solid fa-up-right-from-square"></i> -->
-                 <img src="assets/images/icones/export.png" alt="" srcset="">
-                Exporter
-              </button>
+          <!-- Page Header -->
+           <div class="max-w-7xl mx-auto">
+    <div class="mb-8">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-dark">Documents et Archivage</h1>
+          <p class="text-gray-600 mt-2">Suivre la complétude documentaire et l'archivage</p>
+        </div>
         
-              <!-- Menu dropdown -->
-              <div
-                *ngIf="isOpen"
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                [@slideInOut]
-              >
-                <div class="py-1">
-                  <!-- En-tête du dropdown -->
-                  <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
-                    Exporter sous
-                  </div>
-                  
-                  <!-- Option PDF -->
-                  <button
-                    (click)="exportToPDF()"
-                    class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
-                  >
-                    <!-- Icône PDF -->
-                    <div class="flex-shrink-0 w-8 h-8 mr-3  rounded flex items-center justify-center">
-                      <img src="assets/images/icones/pdf.png" alt="" srcset="">
-                    </div>
-                    <span class="font-medium">PDF</span>
-                  </button>
-        
-                  <!-- Option Excel -->
-                  <button
-                    (click)="exportToExcel()"
-                    class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
-                  >
-                    <!-- Icône Excel -->
-                    <div class="flex-shrink-0 w-8 h-8 mr-3 rounded flex items-center justify-center">
-                      <img src="assets/images/icones/excel.png" alt="" srcset="">
-                    </div>
-                    <span class="font-medium">EXCEL</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-           
-          </div>
-        </div>
-      </div>
-  
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Documents associés -->
-        <div class="bg-white rounded-lg  p-6 ">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.associatedDocuments) }}</div>
-              <div class="text-gray-600 mt-1">Documents associés</div>
-            </div>
-            <div class="w-12 h-12 bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
-              <img src="assets/images/icones/users1.png" alt="" srcset="">
-            </div>
-          </div>
-        </div>
-  
-        <!-- Documents archivés -->
-        <div class="bg-white rounded-lg p-6 ">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.archivedDocuments) }}</div>
-              <div class="text-gray-600 mt-1">Documents archivés</div>
-            </div>
-            <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
-           <img src="assets/images/icones/check.png" alt="" srcset="">
-            </div>
-          </div>
-        </div>
-  
-        <!-- Documents expirés -->
-        <div class="bg-white rounded-lg p-6 ">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.expiredDocuments) }}</div>
-              <div class="text-gray-600 mt-1">Documents expirés</div>
-            </div>
-            <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
-              <img src="assets/images/icones/check.png" alt="" srcset="">
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Charts Row 1 -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        
-        <!-- Bar Chart -->
-        <div class="bg-white rounded-lg  p-6 ">
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">Nombre total de documents associés</h3>
-            <div class="relative">
-              <select (change)="onTimeframeChange($event)" 
-                      class="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-1 pr-8 text-sm text-gray-700">
-                <option value="Mensuel">Mensuel</option>
-                <option value="Hebdomadaire">Hebdomadaire</option>
-                <option value="Annuel">Annuel</option>
-              </select>
-              <svg class="w-4 h-4 absolute right-2 top-2.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <!-- Period Selector -->
+          <div class="relative">
+            <select 
+              class="appearance-none bg-white  rounded-lg px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2  font-inter" >
+              <option class="text-dark text-sm font-inter" value="periode"> <i class="fa-regular fa-calendar"></i> Période</option>
+              <option>Cette semaine</option>
+              <option>Ce mois</option>
+              <option selected>Cette année</option>
+              <option>Toutes les périodes</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
+              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
               </svg>
             </div>
           </div>
-          <div class="h-64">
-            <canvas #barChart></canvas>
-          </div>
-        </div>
+          
   
-        <!-- Pie Chart -->
-        <div class="bg-white rounded-lg  p-6 ">
-          <h3 class="text-lg font-semibold text-gray-900 mb-6">Nombre de documents par type</h3>
-          <div class="flex items-center justify-center mb-4">
-            <div class="w-48 h-48">
-              <canvas #pieChart></canvas>
+          
+          <!-- Region Selector -->
+          <div class="relative">
+            <select 
+              class="appearance-none bg-white rounded-[10px] px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option>Région</option>
+              <option selected>Toutes les régions</option>
+              <option>Dakar</option>
+              <option>Thiès</option>
+              <option>Saint-Louis</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
+              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+              </svg>
             </div>
           </div>
-          <div class="grid grid-cols-3 gap-3">
-            <div *ngFor="let type of documentTypes" class="flex items-center space-x-2">
-              <div class="w-3 h-3 rounded-full" [style.background-color]="type.color"></div>
-              <span class="text-sm text-gray-600">{{ type.type }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Charts Row 2 -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        
-        <!-- Donut Chart -->
-        <div class="bg-white rounded-lg  p-6 ">
-          <h3 class="text-lg font-semibold text-gray-900 mb-6">Taux de mise à jour des documents (%)</h3>
-          <div class="flex items-center justify-center mb-4">
-            <div class="relative w-48 h-48">
-              <canvas #donutChart></canvas>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <div class="text-center">
-                  <div class="text-2xl font-bold text-gray-900">{{ updateRate.updatedPercentage }}%</div>
+          
+          <div class="relative inline-block text-left">
+            <!-- Bouton principal -->
+            <button 
+            (click)="toggleDropdown()"
+              class="bg-[#3072BC] hover:bg-[#3072BC] text-white px-6 py-2 rounded-[5px] flex items-center gap-2 transition-colors duration-200 p-[10px]">
+              <!-- <i class="fa-solid fa-up-right-from-square"></i> -->
+               <img src="assets/images/icones/export.png" alt="" srcset="">
+              Exporter
+            </button>
+      
+            <!-- Menu dropdown -->
+            <div
+              *ngIf="isOpen"
+              class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              [@slideInOut]
+            >
+              <div class="py-1">
+                <!-- En-tête du dropdown -->
+                <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+                  Exporter sous
                 </div>
+                
+                <!-- Option PDF -->
+                <button
+                  (click)="exportToPDF()"
+                  class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+                >
+                  <!-- Icône PDF -->
+                  <div class="flex-shrink-0 w-8 h-8 mr-3  rounded flex items-center justify-center">
+                    <img src="assets/images/icones/pdf.png" alt="" srcset="">
+                  </div>
+                  <span class="font-medium">PDF</span>
+                </button>
+      
+                <!-- Option Excel -->
+                <button
+                  (click)="exportToExcel()"
+                  class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+                >
+                  <!-- Icône Excel -->
+                  <div class="flex-shrink-0 w-8 h-8 mr-3 rounded flex items-center justify-center">
+                    <img src="assets/images/icones/excel.png" alt="" srcset="">
+                  </div>
+                  <span class="font-medium">EXCEL</span>
+                </button>
               </div>
             </div>
           </div>
-          <div class="flex justify-center space-x-6 mb-2">
-            <div class="flex items-center space-x-2">
-              <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span class="text-sm text-gray-600">Document à jour</span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <div class="w-3 h-3 bg-blue-300 rounded-full"></div>
-              <span class="text-sm text-gray-600">Document manquant</span>
-            </div>
+         
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Documents associés -->
+      <div class="bg-white rounded-lg  gap-3 opacity-100 p-5  w-[400px] h-[106px]">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.associatedDocuments) }}</div>
+            <div class="text-gray-600 mt-1">Documents associés</div>
           </div>
-          <div class="text-center">
-            <div class="text-sm text-gray-500">{{ updateRate.missingPercentage }}%</div>
+          <div class="w-12 h-12 bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+            <img src="assets/images/icones/users1.png" alt="" srcset="">
           </div>
         </div>
+      </div>
+
+      <!-- Documents archivés -->
+      <div class="bg-white rounded-lg  w-[400px] h-[106px] gap-3 opacity-100 p-5 ">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.archivedDocuments) }}</div>
+            <div class="text-gray-600 mt-1">Documents archivés</div>
+          </div>
+          <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+         <img src="assets/images/icones/check.png" alt="" srcset="">
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents expirés -->
+      <div class="bg-white rounded-lg  w-[400px] h-[106px] gap-3 opacity-100 p-5 ">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-3xl font-bold text-gray-900">{{ formatNumber(documentStats.expiredDocuments) }}</div>
+            <div class="text-gray-600 mt-1">Documents expirés</div>
+          </div>
+          <div class="w-12 h-12  bg-white shadow-[0px_2px_10px_0px_#7C8DB51F] rounded-lg flex items-center justify-center">
+            <img src="assets/images/icones/check.png" alt="" srcset="">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      
+      <!-- Bar Chart -->
+     <!-- document-chart.component.html -->
+<div class="bg-white p-6 rounded-lg shadow-sm">
+  <!-- Header avec le titre et le dropdown -->
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-semibold text-gray-800">
+      Nombre total de documents associés
+    </h2>
+    
+    <!-- Dropdown Mensuel -->
+    <div class="relative">
+      <button 
+        class="flex items-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        (click)="togglesDropdown()">
+        <span class="mr-2">{{ selectedPeriod }}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      
+      <!-- Dropdown menu -->
+      <div 
+        *ngIf="isDropdownOpen" 
+        class="absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+        <button 
+          *ngFor="let period of periods"
+          class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+          (click)="onPeriod(period)">
+          {{ period }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container du graphique -->
+  <div class="relative h-64">
+    <canvas #chartCanvas></canvas>
+  </div>
+</div>
+
+      <!-- Pie Chart -->
+      <div class="bg-white rounded-lg  p-6 ">
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">Nombre de documents par type</h3>
+        <div class="flex items-center justify-center mb-4">
+          <div class="w-48 h-48">
+            <canvas #pieChart></canvas>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div *ngFor="let type of documentTypes" class="flex items-center space-x-2">
+            <div class="w-3 h-3 rounded-full" [style.background-color]="type.color"></div>
+            <span class="text-sm text-gray-600">{{ type.type }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      
+        <!-- Donut Chart -->
+        <div class="bg-white rounded-[12px]  p-6 flex flex-col items-center justify-center">
   
+    
+          <!-- Graphique Donut - Total Revenue -->
+        
+            <!-- Titre principal -->
+            <h3 class="text-sm font-semibold text-dark mb-2 text-center">
+              Total Revenue
+            </h3>
+            
+            <!-- Conteneur du graphique -->
+            <div class="relative w-[150px] h-[150px] mb-8">
+              <!-- Canvas pour Chart.js -->
+              <canvas 
+                #donutChart
+                id="donutChart"
+                class="max-w-full max-h-full">
+              </canvas>
+            </div>
+            
+            <!-- Légendes personnalisées -->
+            <div class="flex items-center space-x-8">
+              <!-- Légende Bâtiments occupés -->
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-[#096BFF]"></div>
+                <span class="text-xs font-medium text-dark">Bâtiments occupés ({{occupiedPercentage}}%)</span>
+              </div>
+              
+              <!-- Légende Bâtiments vacants -->
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-[#95A4FC]"></div>
+                <span class="text-xs font-medium text-dark">Bâtiments vacants ({{vacantPercentage}}%)</span>
+              </div>
+            </div>
+          </div>
+        
+
         <!-- Grouped Bar Chart -->
         <div class="bg-white rounded-lg  p-6 ">
           <h3 class="text-lg font-semibold text-gray-900 mb-6">Nombre de versions archivées par bâtiment</h3>
@@ -243,78 +267,78 @@
             <span>5</span>
           </div>
         </div>
-      </div>
+      
 
         <!-- Line Chart -->
-        <div class="bg-white rounded-lg p-6 ">
-            <div class="flex justify-between items-center mb-6">
-              <h3 class="text-lg font-semibold text-gray-900">Délai moyen d'exécution (jours)</h3>
-              <div class="relative">
-                <select (change)="onWeeklyTimeframeChange($event)" 
-                  class="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-1 pr-8 text-sm text-gray-700">
-            <option value="Semaine">Semaine</option>
-            <option value="Mois">Mois</option>
-            <option value="Trimestre">Trimestre</option>
-          </select>
-          <svg class="w-4 h-4 absolute right-2 top-2.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </div>
-      </div>
-            
-            <!-- Alert -->
-            <div class="alert-warning rounded-lg p-4 mb-6">
-                <div class="flex items-center space-x-2">
-                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-yellow-800 font-medium">4 à renouveler cette semaine !</span>
-                </div>
-            </div>
-
-            <div class="h-64 relative">
-                <svg class="w-full h-full line-chart" viewBox="0 0 400 200">
-                    <!-- Grid lines -->
-                    <defs>
-                        <pattern id="grid" width="50" height="25" patternUnits="userSpaceOnUse">
-                            <path d="M 50 0 L 0 0 0 25" fill="none" stroke="#f3f4f6" stroke-width="1"/>
-                        </pattern>
-                    </defs>
-                    <rect width="400" height="200" fill="url(#grid)"/>
-                    
-                    <!-- Line path -->
-                    <path d="M 50 175 L 150 125 L 250 75 L 350 100" 
-                          fill="none" stroke="#ef4444" stroke-width="2"/>
-                    
-                    <!-- Data points -->
-                    <circle cx="50" cy="175" r="4" fill="#ef4444"/>
-                    <circle cx="150" cy="125" r="4" fill="#ef4444"/>
-                    <circle cx="250" cy="75" r="4" fill="#ef4444"/>
-                    <circle cx="350" cy="100" r="4" fill="#ef4444"/>
-                </svg>
-                
-                <!-- X-axis labels -->
-                <div class="absolute bottom-0 left-0 right-0 flex justify-between px-8 text-sm text-gray-600">
-                    <span>Semaine 1</span>
-                    <span>Semaine 2</span>
-                    <span>Semaine 3</span>
-                    <span>Semaine 4</span>
-                </div>
-                
-                <!-- Y-axis labels -->
-                <!-- <div class="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-400">
-                    <span>12</span>
-                    <span>10</span>
-                    <span>8</span>
-                    <span>6</span>
-                    <span>4</span>
-                    <span>2</span>
-                    <span>0</span>
-                </div> -->
-            </div>
-        
+       
     </div>
+    <div class="bg-white rounded-lg p-6 w-full ">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-semibold text-gray-900">Délai moyen d'exécution (jours)</h3>
+        <div class="relative">
+          <select (change)="onWeeklyTimeframeChange($event)" 
+            class="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-1 pr-8 text-sm text-gray-700">
+      <option value="Semaine">Semaine</option>
+      <option value="Mois">Mois</option>
+      <option value="Trimestre">Trimestre</option>
+    </select>
+    <svg class="w-4 h-4 absolute right-2 top-2.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </div>
+</div>
+      
+      <!-- Alert -->
+      <div class="alert-warning rounded-lg p-4 mb-6">
+          <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-yellow-800 font-medium">4 à renouveler cette semaine !</span>
+          </div>
+      </div>
 
+      <div class="h-64 relative">
+          <svg class="w-full h-full line-chart" viewBox="0 0 400 200">
+              <!-- Grid lines -->
+              <defs>
+                  <pattern id="grid" width="50" height="25" patternUnits="userSpaceOnUse">
+                      <path d="M 50 0 L 0 0 0 25" fill="none" stroke="#f3f4f6" stroke-width="1"/>
+                  </pattern>
+              </defs>
+              <rect width="400" height="200" fill="url(#grid)"/>
+              
+              <!-- Line path -->
+              <path d="M 50 175 L 150 125 L 250 75 L 350 100" 
+                    fill="none" stroke="#ef4444" stroke-width="2"/>
+              
+              <!-- Data points -->
+              <circle cx="50" cy="175" r="4" fill="#ef4444"/>
+              <circle cx="150" cy="125" r="4" fill="#ef4444"/>
+              <circle cx="250" cy="75" r="4" fill="#ef4444"/>
+              <circle cx="350" cy="100" r="4" fill="#ef4444"/>
+          </svg>
+          
+          <!-- X-axis labels -->
+          <div class="absolute bottom-0 left-0 right-0 flex justify-between px-8 text-sm text-gray-600">
+              <span>Semaine 1</span>
+              <span>Semaine 2</span>
+              <span>Semaine 3</span>
+              <span>Semaine 4</span>
+          </div>
+          
+          <!-- Y-axis labels -->
+          <!-- <div class="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-400">
+              <span>12</span>
+              <span>10</span>
+              <span>8</span>
+              <span>6</span>
+              <span>4</span>
+              <span>2</span>
+              <span>0</span>
+          </div> -->
+      </div>
+  
+  </div>
 
-<!-- le ts  -->
-
+</div>

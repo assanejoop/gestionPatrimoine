@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
+import { ArcElement, Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
@@ -49,14 +49,19 @@ interface ExecutionDelay {
 })
 export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDestroy {
   
-  @ViewChild('barChart', { static: false }) barChartCanvas!: ElementRef<HTMLCanvasElement>;
+  // ViewChild déclarations corrigées
+  @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('pieChart', { static: false }) pieChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('donutChart', { static: false }) donutChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('groupedBarChart', { static: false }) groupedBarChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('lineChart', { static: false }) lineChartCanvas!: ElementRef<HTMLCanvasElement>;
 
+  // Stockage des graphiques
   private charts: Chart[] = [];
- isOpen=false;
+  private barChart: Chart | null = null;
+
+  isOpen = false;
+  
   // Données principales
   documentStats: DocumentStats = {
     associatedDocuments: 1248,
@@ -104,6 +109,26 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
   renewalAlert: boolean = true;
   renewalCount: number = 4;
 
+  selectedPeriod: string = 'Mensuel';
+  isDropdownOpen: boolean = false;
+  periods: string[] = ['Mensuel', 'Hebdomadaire', 'Annuel'];
+
+  public occupiedPercentage: number = 80;
+  public vacantPercentage: number = 20;
+
+  // Données du graphique
+  chartData = {
+    labels: ['Jan', 'Fév', 'Mar', 'Avril'],
+    datasets: [{
+      data: [39, 45, 59, 15],
+      backgroundColor: '#4F96FF',
+      borderColor: '#4F96FF',
+      borderWidth: 0,
+      borderRadius: 0,
+      borderSkipped: false,
+    }]
+  };
+
   constructor() {}
 
   ngOnInit(): void {
@@ -111,19 +136,34 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngAfterViewInit(): void {
+    // Augmenter le délai pour être sûr que les éléments sont rendus
     setTimeout(() => {
-      this.createBarChart();
-      this.createPieChart();
-      this.createDonutChart();
-      this.createGroupedBarChart();
-      this.createLineChart();
-    }, 100);
+      this.initializeAllCharts();
+    }, 200);
   }
 
   ngOnDestroy(): void {
-    this.charts.forEach(chart => chart.destroy());
+    this.charts.forEach(chart => {
+      if (chart) {
+        chart.destroy();
+      }
+    });
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
   }
 
+  private initializeAllCharts(): void {
+    console.log('Initialisation des graphiques...');
+    
+    // Vérifier et créer chaque graphique
+    this.createBarChart();
+    this.createPieChart();
+    this.createDonutChart();
+    this.createGroupedBarChart();
+    
+    console.log('Tous les graphiques initialisés');
+  }
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
@@ -135,38 +175,49 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
 
   exportToPDF() {
     console.log('Export en PDF...');
-    // Ajoutez ici votre logique d'export PDF
     this.closeDropdown();
   }
 
   exportToExcel() {
     console.log('Export en Excel...');
-    // Ajoutez ici votre logique d'export Excel
     this.closeDropdown();
   }
-  private createBarChart(): void {
-    if (!this.barChartCanvas) return;
 
-    const ctx = this.barChartCanvas.nativeElement.getContext('2d');
-    if (!ctx) return;
+  createBarChart(): void {
+    if (!this.chartCanvas?.nativeElement) {
+      console.error('Canvas pour le graphique en barres non trouvé');
+      return;
+    }
+
+    const ctx = this.chartCanvas.nativeElement.getContext('2d');
+    if (!ctx) {
+      console.error('Impossible d\'obtenir le contexte 2D');
+      return;
+    }
+
+    // Détruire le graphique existant s'il y en a un
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
 
     const config: ChartConfiguration = {
-      type: 'bar',
-      data: {
-        labels: this.monthlyData.map(d => d.month),
-        datasets: [{
-          data: this.monthlyData.map(d => d.count),
-          backgroundColor: '#3b82f6',
-          borderRadius: 4,
-          barThickness: 40
-        }]
-      },
+      type: 'bar' as ChartType,
+      data: this.chartData,
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleColor: 'white',
+            bodyColor: 'white',
+            borderColor: 'rgba(0, 0, 0, 0.8)',
+            borderWidth: 1,
+            cornerRadius: 4,
+            displayColors: false
           }
         },
         scales: {
@@ -176,23 +227,105 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
             },
             border: {
               display: false
+            },
+            ticks: {
+              color: '#9CA3AF',
+              font: {
+                size: 14,
+                weight: 'normal'
+              },
+              padding: 10
             }
           },
           y: {
-            display: false,
             beginAtZero: true,
-            max: 70
+            max: 70,
+            grid: {
+              color: '#F3F4F6',
+              lineWidth: 1
+            },
+            border: {
+              display: false
+            },
+            ticks: {
+              color: '#9CA3AF',
+              font: {
+                size: 14,
+                weight: 'normal'
+              },
+              stepSize: 10,
+              padding: 15,
+              callback: function(value) {
+                return value.toString();
+              }
+            }
+          }
+        },
+        elements: {
+          bar: {
+            borderWidth: 0
+          }
+        },
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 10,
+            left: 10,
+            right: 20
           }
         }
       }
     };
 
-    const chart = new Chart(ctx, config);
-    this.charts.push(chart);
+    this.barChart = new Chart(ctx, config);
+    console.log('Graphique en barres créé avec succès');
+  }
+
+  togglesDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  onPeriod(period: string): void {
+    this.selectedPeriod = period;
+    this.isDropdownOpen = false;
+    this.updateChartData(period);
+  }
+
+  private updateChartData(period: string): void {
+    let newData;
+    let newLabels;
+
+    switch (period) {
+      case 'Hebdomadaire':
+        newLabels = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'];
+        newData = [25, 35, 42, 28];
+        break;
+      case 'Annuel':
+        newLabels = ['2021', '2022', '2023', '2024'];
+        newData = [180, 220, 195, 240];
+        break;
+      default:
+        newLabels = ['Jan', 'Fév', 'Mar', 'Avril'];
+        newData = [39, 45, 59, 15];
+        break;
+    }
+
+    if (this.barChart) {
+      this.barChart.data.labels = newLabels;
+      this.barChart.data.datasets[0].data = newData;
+      this.barChart.update();
+    }
+  }
+
+  onClickOutside(): void {
+    this.isDropdownOpen = false;
   }
 
   private createPieChart(): void {
-    if (!this.pieChartCanvas) return;
+    if (!this.pieChartCanvas?.nativeElement) {
+      console.error('Canvas pour le graphique en secteurs non trouvé');
+      return;
+    }
 
     const ctx = this.pieChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -220,42 +353,78 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
 
     const chart = new Chart(ctx, config);
     this.charts.push(chart);
+    console.log('Graphique en secteurs créé avec succès');
   }
 
   private createDonutChart(): void {
-    if (!this.donutChartCanvas) return;
-
+    if (!this.donutChartCanvas?.nativeElement) {
+      console.error('Canvas pour le graphique donut non trouvé');
+      return;
+    }
+    
     const ctx = this.donutChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    const config: ChartConfiguration = {
+    const config: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
-        labels: ['Document à jour', 'Document manquant'],
+        labels: ['Bâtiments occupés', 'Bâtiments vacants'],
         datasets: [{
-          data: [this.updateRate.updated, this.updateRate.missing],
-          backgroundColor: ['#3b82f6', '#a5b4fc'],
+          data: [this.occupiedPercentage, this.vacantPercentage],
+          backgroundColor: [
+            '#096BFF',
+            '#95A4FC'
+          ],
           borderWidth: 0,
-          // cutout: '65%'
+          hoverBackgroundColor: [
+            '#2563eb',
+            '#8b5cf6'
+          ]
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '50%',
         plugins: {
           legend: {
             display: false
+          },
+          tooltip: {
+            enabled: true,
+            backgroundColor: 'white',
+            titleColor: '#374151',
+            bodyColor: '#374151',
+            borderColor: '#e5e7eb',
+            borderWidth: 1,
+            cornerRadius: 8,
+            displayColors: true,
+            callbacks: {
+              label: (context) => {
+                const label = context.label || '';
+                const value = context.parsed;
+                return `${label}: ${value}%`;
+              }
+            }
           }
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeOutCubic'
         }
       }
     };
 
     const chart = new Chart(ctx, config);
     this.charts.push(chart);
+    console.log('Graphique donut créé avec succès');
   }
 
   private createGroupedBarChart(): void {
-    if (!this.groupedBarChartCanvas) return;
+    if (!this.groupedBarChartCanvas?.nativeElement) {
+      console.error('Canvas pour le graphique en barres groupées non trouvé');
+      return;
+    }
 
     const ctx = this.groupedBarChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -309,58 +478,7 @@ export class DocumentsArchivageComponent implements OnInit, AfterViewInit, OnDes
 
     const chart = new Chart(ctx, config);
     this.charts.push(chart);
-  }
-
-  private createLineChart(): void {
-    if (!this.lineChartCanvas) return;
-
-    const ctx = this.lineChartCanvas.nativeElement.getContext('2d');
-    if (!ctx) return;
-
-    const config: ChartConfiguration = {
-      type: 'line',
-      data: {
-        labels: this.executionDelays.map(d => d.week),
-        datasets: [{
-          data: this.executionDelays.map(d => d.days),
-          borderColor: '#ef4444',
-          backgroundColor: '#ef4444',
-          borderWidth: 2,
-          pointRadius: 4,
-          pointBorderWidth: 0,
-          fill: false,
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              display: true,
-              color: '#f3f4f6'
-            },
-            border: {
-              display: false
-            }
-          },
-          y: {
-            display: false,
-            beginAtZero: true,
-            max: 15
-          }
-        }
-      }
-    };
-
-    const chart = new Chart(ctx, config);
-    this.charts.push(chart);
+    console.log('Graphique en barres groupées créé avec succès');
   }
 
   onPeriodChange(event: Event): void {

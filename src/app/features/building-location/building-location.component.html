@@ -1,13 +1,15 @@
 <!-- Container principal -->
-<div class="min-h-screen bg-gray-50 p-6">
+<div class="min-h-screen bg-fourth p-6">
     <div class="max-w-7xl mx-auto">
       
       <!-- Header avec titre et bouton -->
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-2xl font-semibold text-gray-900">Suivi des Locations</h1>
         <button 
-          (click)="ajouterBail()"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
+        (click)="ajouterBail()"
+          class="bg-[#3072BC] hover:bg-[#3072BC] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors" 
+        
+         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
@@ -16,7 +18,7 @@
       </div>
   
       <!-- Carte d'information du bail -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div class="bg-white rounded-lg  p-6 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <!-- Bailleur -->
           <div class="flex items-center gap-3">
@@ -77,7 +79,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         <!-- Coordonnées -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-lg ">
           <div class="p-6 border-b border-gray-200">
             <div class="flex justify-between items-center">
               <h2 class="text-lg font-semibold text-gray-900">Coordonnées</h2>
@@ -148,7 +150,7 @@
         </div>
   
         <!-- Coordonnées bancaires -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-lg ">
           <div class="p-6 border-b border-gray-200">
             <div class="flex justify-between items-center">
               <h2 class="text-lg font-semibold text-gray-900">Coordonnées bancaires</h2>
@@ -219,7 +221,7 @@
       </div>
   
       <!-- Conditions du bail -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-6">
+      <div class="bg-white rounded-lg  mt-6">
         <div class="p-6 border-b border-gray-200">
           <h2 class="text-lg font-semibold text-gray-900">Conditions du bail</h2>
         </div>
@@ -272,7 +274,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         
         <!-- Historique des paiements -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-lg ">
           <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex justify-between items-center">
               <h2 class="text-lg font-semibold text-gray-900">Historique des paiements</h2>
@@ -324,7 +326,7 @@
         </div>
   
         <!-- Documents associés -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-lg ">
           <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex justify-between items-center">
               <h2 class="text-lg font-semibold text-gray-900">Documents associés</h2>
@@ -359,5 +361,277 @@
         </div>
       </div>
   
+    </div>
+
+
+  <div *ngIf="isOpen" class="fixed inset-0 z-50 flex items-center justify-center">
+      
+      <!-- Modal Content -->
+      <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between p-6 border-b">
+          <h2 class="text-xl font-semibold text-gray-800">Ajouter un nouveau bail</h2>
+          <button 
+            (click)="closeModal()"
+            class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Form -->
+        <form (ngSubmit)="onSubmit()" class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Nom du bailleur -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Nom du bailleur <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="bailData.nomBailleur"
+                name="nomBailleur"
+                placeholder="Saisir"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <!-- Représentant légal -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Représentant légal
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="bailData.representantLegal"
+                name="representantLegal"
+                placeholder="Saisir"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <!-- Téléphone -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Téléphone <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                [(ngModel)]="bailData.telephone"
+                name="telephone"
+                placeholder="Saisir"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <!-- Email -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                [(ngModel)]="bailData.email"
+                name="email"
+                placeholder="Saisir"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <!-- Adresse -->
+            <div class="space-y-2 md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Adresse
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="bailData.adresse"
+                name="adresse"
+                placeholder="Saisir"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <!-- Date de début du bail -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Date de début du bail <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  type="date"
+                  [(ngModel)]="bailData.dateDebut"
+                  name="dateDebut"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date de fin du bail -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Date de fin du bail <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  type="date"
+                  [(ngModel)]="bailData.dateFin"
+                  name="dateFin"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Montant du loyer -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Montant du loyer <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                [(ngModel)]="bailData.montantLoyer"
+                name="montantLoyer"
+                placeholder="Saisir"
+                required
+                min="0"
+                step="1000"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <!-- Fréquence de paiement -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Fréquence de paiement <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <select
+                  [(ngModel)]="bailData.frequencePaiement"
+                  name="frequencePaiement"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white">
+                  <option value="" disabled>Sélectionner</option>
+                  <option value="mensuel">Mensuel</option>
+                  <option value="trimestriel">Trimestriel</option>
+                  <option value="semestriel">Semestriel</option>
+                  <option value="annuel">Annuel</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Dépot de garantie 
+              </label>
+              <input
+                type="number"
+                [(ngModel)]="bailData.montantLoyer"
+                name="montantLoyer"
+                placeholder="Saisir"
+                required
+                min="0"
+                step="1000"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Modalités de  révision 
+              </label>
+              <input
+                type="number"
+                [(ngModel)]="bailData.montantLoyer"
+                name="montantLoyer"
+                placeholder="Saisir"
+                required
+                min="0"
+                step="1000"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Clause de reconduction 
+              </label>
+              <div class="relative">
+                <select
+                  [(ngModel)]="bailData.frequencePaiement"
+                  name="frequencePaiement"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white">
+                  <option value="" disabled>Sélectionner</option>
+                  <option value="mensuel">Mensuel</option>
+                  <option value="trimestriel">Trimestriel</option>
+                  <option value="semestriel">Semestriel</option>
+                  <option value="annuel">Annuel</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Preavis de resilations (mois) 
+              </label>
+              <input
+                type="number"
+                [(ngModel)]="bailData.montantLoyer"
+                name="montantLoyer"
+                placeholder="Saisir"
+                required
+                min="0"
+                step="1000"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-1">Contrat de bail <span class="text-red-500">*</span></label>
+              <div class="border-2 border-dashed border-gray-300 rounded-lg text-center w-full h-full px-6 m-2">
+                <div class="flex flex-col items-center space-y-2">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <p class="text-gray-500 text-sm">Choisissez un fichier ou faites-le glisser et déposez-le ici</p>
+                  <p class="text-gray-400 text-xs">Formats PDF, IMAGES(png, jpg) jusqu'à 2 Mo</p>
+                  <input type="file" class="hidden" #fileInput />
+                  <button type="button" (click)="fileInput.click()" class="mt-2 px-4 py-2 border rounded text-sm">Parcourir le fichier</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex justify-end space-x-4 mt-8 pt-6 border-t">
+            <button
+              type="submit"
+              class="px-8 py-2 bg-[#3072BC] hover:bg-[#3072BC] text-white rounded-md transition-colors font-medium">
+              Enregistrer
+            </button>
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="px-8 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors font-medium">
+              Annuler
+            </button>
+            
+          </div>
+        </form>
+      </div>
     </div>
   </div>

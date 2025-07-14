@@ -1,156 +1,163 @@
-    <div class="p-6 bg-gray-50 min-h-screen">
-        <h1 class="text-2xl font-bold text-dark mb-6">Gestion des Utilisateurs</h1>
-        <p class="text-gray-600 mb-8">Gérer les accès et l'activité de la plateforme</p>
-        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            
-            <div class="relative">
-              <select 
-                class="appearance-none bg-white  rounded-lg px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2  font-inter" >
-                <option class="text-dark text-sm font-inter" value="periode"> <i class="fa-regular fa-calendar"></i> Période</option>
-                <option>Cette semaine</option>
-                <option>Ce mois</option>
-                <option selected>Cette année</option>
-                <option>Toutes les périodes</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
+<div class=" bg-fourth max-w-7xl mx-auto ">
+    <!-- Header avec navigation et actions -->
+    <div class="mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-1">Gestion des Utilisateurs</h1>
+                <p class="text-gray-600">Gérer les accès et l'activité de la plateforme</p>
             </div>
-            
-    
-            
-            
-            <div class="relative">
-              <select 
-                class="appearance-none bg-white rounded-[10px] px-4 py-2 pr-8 text-dark focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option>Région</option>
-                <option selected>Toutes les régions</option>
-                <option>Dakar</option>
-                <option>Thiès</option>
-                <option>Saint-Louis</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
+            <div class="flex items-center space-x-4">
+                <button class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Période
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <button class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Région
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <button class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Exporter
+                </button>
             </div>
-            
-            <div class="relative inline-block text-left">
-            
-              <button 
-              (click)="toggleDropdown()"
-                class="bg-[#3072BC] hover:bg-[#3072BC] text-white px-6 py-2 rounded-[5px] flex items-center gap-2 transition-colors duration-200 p-[10px]">
-                
-                 <img src="assets/images/icones/export.png" alt="" srcset="">
-                Exporter
-              </button>
-        
-              <!-- Menu dropdown -->
-              <div
-                *ngIf="isOpen"
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                [@slideInOut]
-              >
-                <div class="py-1">
-                  <!-- En-tête du dropdown -->
-                  <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
-                    Exporter sous
-                  </div>
-                  
-                  <!-- Option PDF -->
-                  <button
-                    (click)="exportToPDF()"
-                    class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
-                  >
-                    <!-- Icône PDF -->
-                    <div class="flex-shrink-0 w-8 h-8 mr-3  rounded flex items-center justify-center">
-                      <img src="assets/images/icones/pdf.png" alt="" srcset="">
-                    </div>
-                    <span class="font-medium">PDF</span>
-                  </button>
-        
-                  <!-- Option Excel -->
-                  <button
-                    (click)="exportToExcel()"
-                    class="group flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
-                  >
-                    <!-- Icône Excel -->
-                    <div class="flex-shrink-0 w-8 h-8 mr-3 rounded flex items-center justify-center">
-                      <img src="assets/images/icones/excel.png" alt="" srcset="">
-                    </div>
-                    <span class="font-medium">EXCEL</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-           
-          </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Utilisateurs actifs -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-4xl font-bold text-gray-800 mb-2">156</h2>
-            <p class="text-gray-600 mb-4">Utilisateurs actifs</p>
-            <h3 class="font-semibold text-gray-700 mb-2">Répartition par rôle</h3>
-            <div class="h-40">
-            <canvas id="roleChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Connexions ce mois -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-4xl font-bold text-gray-800 mb-2">1,248</h2>
-            <p class="text-gray-600 mb-4">Connexions ce mois</p>
-            <h3 class="font-semibold text-gray-700 mb-2">Connexions mensuelles / actives</h3>
-            <div class="h-40">
-            <canvas id="connectionsChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Taux d'utilisation -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h3 class="font-semibold text-gray-700 mb-2">Taux d'utilisation des fonctionnalités</h3>
-            <div class="h-40">
-            <canvas id="usageChart"></canvas>
-            </div>
-        </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <!-- Connexions échouées -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h3 class="font-semibold text-gray-700 mb-2">Connexions échouées (avec seuil d'alerte)</h3>
-            <div class="h-64">
-            <canvas id="failedLoginsChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Dernière connexion par utilisateur -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h3 class="font-semibold text-gray-700 mb-4">Dernière connexion par utilisateur</h3>
-            
-            <div class="space-y-4">
-            <div class="border-b pb-3">
-                <p class="font-medium text-gray-800">Cheikh Gueye</p>
-                <p class="text-sm text-gray-500">10/04/2025 14:30</p>
-                <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">Admin</span>
-            </div>
-            
-            <div class="border-b pb-3">
-                <p class="font-medium text-gray-800">Awa Ndiaye</p>
-                <p class="text-sm text-gray-500">08/04/2025 09:15</p>
-                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-800 rounded">Utilisateur</span>
-            </div>
-            
-            <div class="border-b pb-3">
-                <p class="font-medium text-gray-800">Omar Ba</p>
-                <p class="text-sm text-gray-500">05/04/2025 16:45</p>
-                <span class="inline-block px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded">Consultant</span>
-            </div>
-            </div>
-        </div>
         </div>
     </div>
+
+    <!-- Cartes de statistiques principales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold text-gray-900">156</h2>
+                    <p class="text-gray-600">Utilisateurs actifs</p>
+                </div>
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold text-gray-900">1,248</h2>
+                    <p class="text-gray-600">Connexions ce mois</p>
+                </div>
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold text-gray-900">12</h2>
+                    <p class="text-gray-600">Administrateurs</p>
+                </div>
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 115 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Première ligne avec graphiques principaux -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <!-- Carte Répartition par rôle -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 class="font-semibold text-gray-700 mb-4">Répartition par rôle</h3>
+            <div class="h-48">
+                <canvas id="roleChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Carte Connexions mensuelles -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 lg:col-span-2">
+            <h3 class="font-semibold text-gray-700 mb-4">Connexions mensuelles / actives</h3>
+            <div class="text-xs text-blue-600 mb-2">⋯⋯⋯⋯ Connexions actives</div>
+            <div class="h-48">
+                <canvas id="connectionsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deuxième ligne avec graphiques secondaires -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Carte Taux d'utilisation -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 class="font-semibold text-gray-700 mb-4">Taux d'utilisation des fonctionnalités</h3>
+            <div class="text-xs text-blue-600 mb-2">■ Utilisation(%)</div>
+            <div class="h-48">
+                <canvas id="usageChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Carte Connexions échouées -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 class="font-semibold text-gray-700 mb-4">Connexions échouées (avec seuil d'alerte)</h3>
+            <div class="h-48">
+                <canvas id="failedLoginsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte Dernière connexion par utilisateur -->
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+        <h3 class="font-semibold text-gray-700 mb-4">Dernière connexion par utilisateur</h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span class="text-white text-sm font-medium">CG</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-medium text-gray-900">Cheikh Gueye</p>
+                    <p class="text-sm text-gray-500">10/04/2025 14:30</p>
+                </div>
+                <span class="inline-block px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Admin</span>
+            </div>
+            
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
+                    <span class="text-white text-sm font-medium">AN</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-medium text-gray-900">Awa Ndiaye</p>
+                    <p class="text-sm text-gray-500">08/04/2025 09:15</p>
+                </div>
+                <span class="inline-block px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Utilisateur</span>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
+                    <span class="text-white text-sm font-medium">OB</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-medium text-gray-900">Omar Ba</p>
+                    <p class="text-sm text-gray-500">05/04/2025 16:45</p>
+                </div>
+                <span class="inline-block px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Consultant</span>
+            </div>
+        </div>
+    </div>
+</div>

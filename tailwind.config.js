@@ -13,6 +13,7 @@ module.exports = {
         secondary: '#53170C',
         thrid:'#777777',
         fourth:'#F5F7FA',
+        fiveth:'#1A365D',
         dark: '#2C3E50',
         indigo:'#1E1B39',
         

@@ -1,0 +1,100 @@
+/* Styles pour les sélecteurs */
+select {
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="6 9 12 15 18 9"%3E%3C/polyline%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.8em;
+}
+
+/* Styles pour les champs obligatoires */
+.required-field::after {
+  content: '*';
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+/* Styles pour les étapes */
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-circle {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.step-circle.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.step-circle.inactive {
+  background-color: #d1d5db;
+  color: #4b5563;
+}
+
+.step-line {
+  height: 0.25rem;
+  width: 6rem;
+}
+
+.step-line.active {
+  background-color: #3b82f6;
+}
+
+.step-line.inactive {
+  background-color: #d1d5db;
+}
+
+.step-label {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.step-label.active {
+  color: #3b82f6;
+}
+
+.step-label.inactive {
+  color: #6b7280;
+}
+
+/* Styles pour les boutons de navigation */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+/* Styles pour les champs de formulaire */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* Styles pour le datepicker */
+input[type="date"] {
+  appearance: none;
+}
+
+/* Styles pour les champs désactivés */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 interface LocationData {
   bailleur: string;
@@ -42,14 +43,92 @@ interface DocumentAssocie {
   dateAjout: string;
   taille?: string;
 }
+interface BailData {
+  nomBailleur: string;
+  representantLegal: string;
+  telephone: string;
+  email: string;
+  adresse: string;
+  dateDebut: string;
+  dateFin: string;
+  montantLoyer: number;
+  frequencePaiement: string;
+}
 
 @Component({
   selector: 'app-building-location',
-  imports: [ CommonModule],
+  imports: [ CommonModule, ReactiveFormsModule,FormsModule],
   templateUrl: './building-location.component.html',
   styleUrl: './building-location.component.css'
 })
 export class BuildingLocationComponent implements OnInit {
+
+  @Input() isOpen = false;
+  @Output() closeEvent = new EventEmitter<void>();
+  @Output() submitEvent = new EventEmitter<BailData>();
+
+
+
+ajouterBail() {
+  this.isOpen = true;
+}
+
+closeModal() {
+  this.isOpen = false;
+}
+
+  bailData: BailData = {
+    nomBailleur: '',
+    representantLegal: '',
+    telephone: '',
+    email: '',
+    adresse: '',
+    dateDebut: '',
+    dateFin: '',
+    montantLoyer: 0,
+    frequencePaiement: ''
+  };
+
+
+  onOverlayClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.closeModal();
+    }
+  }
+
+
+
+  onSubmit(): void {
+    if (this.isFormValid()) {
+      this.submitEvent.emit({ ...this.bailData });
+      this.closeModal();
+    }
+  }
+
+  private isFormValid(): boolean {
+    return !!(
+      this.bailData.nomBailleur &&
+      this.bailData.telephone &&
+      this.bailData.dateDebut &&
+      this.bailData.dateFin &&
+      this.bailData.montantLoyer > 0 &&
+      this.bailData.frequencePaiement
+    );
+  }
+
+  private resetForm(): void {
+    this.bailData = {
+      nomBailleur: '',
+      representantLegal: '',
+      telephone: '',
+      email: '',
+      adresse: '',
+      dateDebut: '',
+      dateFin: '',
+      montantLoyer: 0,
+      frequencePaiement: ''
+    };
+  }
 
   locationData: LocationData = {
     bailleur: 'Société Immobilière A',
@@ -112,10 +191,6 @@ export class BuildingLocationComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  ajouterBail(): void {
-    console.log('Ajouter un bail');
-    // Logique pour ajouter un nouveau bail
-  }
 
   modifierCoordonnees(): void {
     console.log('Modifier coordonnées');
