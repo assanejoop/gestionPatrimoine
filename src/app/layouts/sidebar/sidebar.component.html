@@ -1,12 +1,11 @@
-<div class="flex flex-col h-full bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 border-r border-gray-200 dark:border-gray-700 w-64 shadow-sm">
-  <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 m-3 flex items-center justify-center border  w-[244px] h-[65.26831817626953px] pb-[10px] gap-[12px] border-b ">
+<div class="flex flex-col h-full bg-white text-gray-800 border-r border-gray-200 w-64 shadow-sm">
+  <div class="p-4 rounded-lg bg-gray-50 m-3 flex items-center justify-center border w-[244px] h-[65.26831817626953px] pb-[10px] gap-[12px] border-b">
     <div class="flex items-center space-x-3">
       <img src="../assets/images/agp.png" class="h-14 object-contain" alt="Logo AGPBE" />
-      <div >
+      <div>
       <h2 class="text-sm font-semibold text-secondary leading-5 font-inter">Agence de Gestion du</h2>
-        <p class="text-sm  font-semibold text-secondary  font-inter leading-5">Patrimoine Bâti de l'État</p>
-      
-    </div>
+        <p class="text-sm font-semibold text-secondary font-inter leading-5">Patrimoine Bâti de l'État</p>
+      </div>
     </div>
   </div>
 
@@ -17,9 +16,9 @@
       <li *ngFor="let item of menuItems(); let i = index" class="mb-2">
         <a 
           [routerLink]="item.subItems ? null : item.route" 
-          [routerLinkActive]="item.subItems ? '' : 'bg-blue-50 dark:bg-gray-800 text-blue-600  text-sm dark:text-blue-400 '" 
+          [routerLinkActive]="item.subItems ? '' : 'bg-blue-50 text-blue-600 text-sm'" 
           [routerLinkActiveOptions]="{exact: !item.subItems}"
-          class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors " 
+          class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700" 
           [class.cursor-pointer]="item.subItems"
           (click)="item.subItems && $event.preventDefault(); item.subItems && toggleSubmenu(i)"
         >
@@ -43,7 +42,7 @@
               </svg>
               <img *ngSwitchCase="'help'" src="assets/images/icones/faq.svg" alt="" class="h-6 w-6">
             </ng-container>
-            <span class="ml-3 font-medium text-sm leading-[14px] tracking-normal font-inter text-dark">{{ item.name }}</span>
+            <span class="ml-3 font-medium text-sm leading-[14px] tracking-normal font-inter text-gray-700">{{ item.name }}</span>
           </div>
           <svg *ngIf="item.subItems" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-200" 
                [class.transform]="item.expanded" [class.rotate-180]="item.expanded"
@@ -53,18 +52,16 @@
         </a>
 
         <!-- Submenu -->
-        <ul *ngIf="item.subItems && item.expanded" class="ml-4 mt-2 space-y-2 transition-all duration-300 ease-in-out text-sm ">
+        <ul *ngIf="item.subItems && item.expanded" class="ml-4 mt-2 space-y-2 transition-all duration-300 ease-in-out text-sm">
           <li *ngFor="let subItem of item.subItems">
             <a 
               [routerLink]="subItem.route"
-              routerLinkActive="bg-[#3072BC1A] text-[#0A1B7B] text-sm font-medium border-l-[3px] border-l-[#3072BC] dark:border-l-[#3072BC] "
+              routerLinkActive="bg-[#3072BC1A] text-[#0A1B7B] text-sm font-medium border-l-[3px] border-l-[#3072BC]"
               [routerLinkActiveOptions]="{exact: true}"
-              class="flex items-center p-3 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-gray-50 hover:text-gray-700 dark:hover:text-gray-700 "
+              class="flex items-center p-3 rounded-lg transition-colors hover:bg-gray-50 hover:text-gray-700 text-gray-600"
               [class.text-gray-600]="!isActiveRoute(subItem.route)"
-              [class.dark:text-gray-500]="!isActiveRoute(subItem.route)"
             >
               <!-- Icône image -->
-              <!-- <img [src]="'assets/images/icones' + subItem.icon + '.png'" class="w-5 h-5 mr-3" alt="icon" /> -->
               <ng-container [ngSwitch]="subItem.icon">
                 <img *ngSwitchCase="'chart-bar'" src="assets/images/icones/chart-bar.png" class="w-5 h-5 mr-3" alt="icon" />
                 <img *ngSwitchCase="'map'" src="assets/images/icones/map.png" class="w-5 h-5 mr-3" alt="icon" />
@@ -77,22 +74,19 @@
                 <img *ngSwitchCase="'building-office'" src="assets/images/icones/building-office.png" class="w-5 h-5 mr-3" alt="icon" />
                 <img *ngSwitchCase="'user-friend'" src="assets/images/icones/user-friend.png" class="w-5 h-5 mr-3" alt="icon" />
                 <img *ngSwitchCase="'map-pin'" src="assets/images/icones/map-pin.png" class="w-5 h-5 mr-3" alt="icon" />
-
               </ng-container>
               
-        
               {{ subItem.name }}
             </a>
           </li>
         </ul>
-        
         
       </li>
     </ul>
   
     <!-- Logout Button -->
     <div class="mb-2 mt-4">
-      <a (click)="logout()" class="flex items-center text-red-600 dark:text-red-400 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+      <a (click)="logout()" class="flex items-center text-red-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
         </svg>
@@ -104,5 +98,3 @@
   <!-- Theme Toggle -->
   
 </div>
-
-<!-- le tsda -->
